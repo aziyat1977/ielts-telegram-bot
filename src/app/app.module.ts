@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { BotModule } from './bot/bot.module'; // or wherever your BotModule lives
+// Adjust this path if your BotModule lives elsewhere
+import { BotModule } from '../bot/bot.module';
 
 @Module({
   imports: [
-    // ← Add this line:
+    // Load .env and make ConfigService globally available
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // your other feature modules
+    // Your feature module
     BotModule,
-    // ...
   ],
 })
 export class AppModule {}
