@@ -31,7 +31,7 @@ async function bootstrap() {
   /* 4. Load examiner SYSTEM_PROMPT once and expose it app-wide */
   const systemPromptPath = resolve(__dirname, '..', 'prompts', 'system.txt');
   const systemPrompt = readFileSync(systemPromptPath, 'utf8');
-  app.set('SYSTEM_PROMPT', systemPrompt);
+  expressApp.set('SYSTEM_PROMPT', systemPrompt);
 
   /* 5. Port from env or fallback */
   const cfg = app.get(ConfigService);
