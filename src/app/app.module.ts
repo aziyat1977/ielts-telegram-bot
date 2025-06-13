@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-// Adjust this path if your BotModule lives elsewhere
 import { BotModule } from '../bot/bot.module';
+import { OpenaiModule } from '../openai/openai.module';
 
 @Module({
   imports: [
-    // Load .env and make ConfigService globally available
+    // 1) Load .env and make ConfigService available everywhere
     ConfigModule.forRoot({ isGlobal: true }),
-
-    // Your feature module
+    // 2) Your feature modules
+    OpenaiModule,
     BotModule,
   ],
 })
