@@ -1,14 +1,18 @@
+// src/app/app.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { BotModule } from '../bot/bot.module';
 import { OpenaiModule } from '../openai/openai.module';
+import { BotModule } from '../bot/bot.module';
 
 @Module({
   imports: [
-    // 1) Load .env and make ConfigService available everywhere
+    // loads .env and makes ConfigService global
     ConfigModule.forRoot({ isGlobal: true }),
-    // 2) Your feature modules
+
+    // global OpenaiService provider
     OpenaiModule,
+
+    // your bot functionality
     BotModule,
   ],
 })
