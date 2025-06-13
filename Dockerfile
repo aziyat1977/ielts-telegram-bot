@@ -1,19 +1,21 @@
-# Use an official Node.js runtime
-FROM node:18-alpine
+# 1) use Node 20 so @nestjs/core (which needs “node >=20”) will install
+FROM node:20-alpine
 
-# Create app directory
+# 2) set working directory
 WORKDIR /app
 
-# Copy manifest & lockfile first, install deps
+# 3) copy only manifest & lockfile first (caching)
 COPY package*.json ./
-RUN npm ci --omit=dev
 
-# Copy the rest of the code and build
+# 4) install prod deps, regenerating lock as needed
+RUN npm install --omit=dev
+
+# 5) copy everything else
 COPY . .
+
+# 6) build your Nest app
 RUN npm run build
 
-# Expose the listening port (Nest listens on 3001 by default)
+# 7) expose and run
 EXPOSE 3001
-
-# Start the app
 CMD ["node", "dist/main.js"]
