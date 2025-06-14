@@ -1,12 +1,15 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 
 @Injectable()
 export class OpenaiService {
   private readonly client: OpenAI;
 
-  constructor() {
-    const apiKey = process.env.OPENAI_API_KEY;
+  constructor(
+    private readonly configService: ConfigService,  // ← inject here
+  ) {
+    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
     if (!apiKey) {
       throw new InternalServerErrorException('Missing OPENAI_API_KEY');
     }
@@ -14,7 +17,6 @@ export class OpenaiService {
   }
 
   async rateEssay(essay: string, userLang?: string) {
-    // Build the message array. We only use { role, content } entries.
     const messages: { role: 'system' | 'user'; content: string }[] = [
       {
         role: 'system',
@@ -30,30 +32,22 @@ export class OpenaiService {
       },
       { role: 'user', content: essay },
     ];
-
     if (userLang) {
-      // In v4, there is no `name` field—just repeat as "user" role.
       messages.push({ role: 'user', content: userLang });
     }
 
     try {
       const resp = await this.client.chat.completions.create({
-  model: 'gpt-4o-mini',
-  temperature: 0.2,
-  messages,
-});
-
-
+        model: 'gpt-4o-mini',
+        temperature: 0.2,
+        messages,
+      });
       const content = resp.choices[0].message?.content;
-      if (!content) {
-        throw new Error('Empty response from OpenAI');
-      }
-
-      // Parse JSON (the API returns a JS object when format: 'json', but guard anyway)
+      if (!content) throw new Error('Empty response from OpenAI');
       return typeof content === 'string' ? JSON.parse(content) : content;
     } catch (err: any) {
       throw new InternalServerErrorException(
-        'OpenAI request failed: ' + err.message
+        'OpenAI request failed: ' + err.message,
       );
     }
   }

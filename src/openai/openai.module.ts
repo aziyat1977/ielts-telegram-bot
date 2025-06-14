@@ -1,4 +1,3 @@
-// src/openai/openai.module.ts
 import { Module, Global } from '@nestjs/common';
 import { OpenaiService } from './openai.service';
 
