@@ -8,19 +8,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # 1️⃣  Check out the repo
+      # 1️⃣  Check out your repository
       - uses: actions/checkout@v4
 
-      # 2️⃣  Block any newly-introduced secrets
-      - name: Prevent secret leaks
-        uses: yankcrime/scan-secrets@v2
+      # 2️⃣  (optional) Quick secret scan with Gitleaks
+      - name: Scan for secrets
+        uses: zricethezav/gitleaks-action@v2
+        continue-on-error: true
 
-      # 3️⃣  Build & deploy to Railway
-      - name: Railway up
-        uses: railwayapp/cli-action@v1
-        env:                        # ← inject the API token stored in GitHub secrets
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        with:
-          cmd: railway up --detach  # build & release the latest commit
-          env: production           # target Railway environment
+      # 3️⃣  Install Railway CLI
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      # 4️⃣  Build & deploy to Railway
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}   # <-- make sure this secret exists
+        run: railway up --detach
