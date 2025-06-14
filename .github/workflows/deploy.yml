@@ -1,3 +1,4 @@
+# .github/workflows/deploy.yml
 name: Deploy to Railway
 
 on:
@@ -8,13 +9,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣  Check out the repo
       - uses: actions/checkout@v4
 
+      # 2️⃣  Block any newly-introduced secrets
       - name: Prevent secret leaks
         uses: yankcrime/scan-secrets@v2
 
+      # 3️⃣  Build & deploy to Railway
       - name: Railway up
         uses: railwayapp/cli-action@v1
+        env:                        # ← inject the API token stored in GitHub secrets
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         with:
-          cmd: railway up --detach
-          env: production
+          cmd: railway up --detach  # build & release the latest commit
+          env: production           # target Railway environment
