@@ -1,1 +1,10 @@
-﻿*.env/.env
+# dependencies
+/node_modules
+/dist
+
+# secrets
+.env*
+*.pem
+
+# misc
+npm-debug.log*

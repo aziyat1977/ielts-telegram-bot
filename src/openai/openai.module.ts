@@ -1,9 +1,22 @@
-import { Module, Global } from '@nestjs/common';
-import { OpenaiService } from './openai.service';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { OpenAI } from 'openai';
 
-@Global()
+export const OPENAI_CLIENT = 'OPENAI_CLIENT';
+
 @Module({
-  providers: [OpenaiService],
-  exports: [OpenaiService],
+  imports: [ConfigModule],
+  providers: [
+    {
+      provide: OPENAI_CLIENT,
+      useFactory: (config: ConfigService) => {
+        const key = config.get<string>('OPENAI_API_KEY');
+        if (!key) throw new Error('Missing OPENAI_API_KEY');
+        return new OpenAI({ apiKey: key });
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: [OPENAI_CLIENT],
 })
 export class OpenaiModule {}

@@ -1,52 +1,44 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit, Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Telegraf } from 'telegraf';
-import { OpenaiService } from '../openai/openai.service';
+import { OPENAI_CLIENT } from '../openai/openai.module';
+import { OpenAI } from 'openai';
 
 @Injectable()
-export class BotService implements OnModuleInit, OnModuleDestroy {
-  private bot!: Telegraf;
+export class BotService implements OnModuleInit {
+  private readonly logger = new Logger(BotService.name);
+  private bot: Telegraf;
 
-  constructor(private readonly openaiService: OpenaiService) {}
+  constructor(
+    private readonly config: ConfigService,
+    @Inject(OPENAI_CLIENT) private readonly openai: OpenAI,
+  ) {}
 
   onModuleInit() {
-    // 1) Initialize Telegraf
-    this.bot = new Telegraf(process.env.BOT_TOKEN!);
+    const token = this.config.get<string>('TELEGRAM_BOT_TOKEN');
+    if (!token) throw new Error('Missing TELEGRAM_BOT_TOKEN');
 
-    // 2) /start handler
-    this.bot.start((ctx) => ctx.reply('👋 Choose language: /en /ru /uz'));
+    this.bot = new Telegraf(token);
 
-    // 3) /rate_essay handler
-    this.bot.command('rate_essay', async (ctx) => {
-      const fullText = ctx.message?.text || '';
-      const essay = fullText.replace(/^\/rate_essay\s*/, '').trim();
-      if (!essay) {
-        return ctx.reply(
-          '❗️ Usage: /rate_essay <your essay text up to 400 words>'
-        );
-      }
+    this.bot.start((ctx) => ctx.reply('👋 Hi, send me your IELTS answer!'));
+    this.bot.on('text', async (ctx) => {
+      const prompt = ctx.message.text;
+      await ctx.reply('📝 Scoring…');
 
-      await ctx.reply('⏳ Rating your essay...');
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: this.config.get<string>('SYSTEM_PROMPT') ?? '',
+          },
+          { role: 'user', content: prompt },
+        ],
+      });
 
-      try {
-        const userLang = 'en';
-        const result = await this.openaiService.rateEssay(essay, userLang);
-        const jsonString = JSON.stringify(result, null, 2);
-        await ctx.replyWithMarkdown('```json\n' + jsonString + '\n```');
-      } catch (err) {
-        console.error('OpenAI error:', err);
-        await ctx.reply(
-          '⚠️ Sorry, something went wrong while rating your essay.'
-        );
-      }
+      await ctx.reply(response.choices[0].message.content.trim());
     });
 
-    // 4) Launch polling
-    this.bot.launch().then(() => {
-      console.log('✅ Bot launched (Nest polling, /rate_essay ready).');
-    });
-  }
-
-  onModuleDestroy() {
-    this.bot.stop('SIGTERM');
+    this.bot.launch().then(() => this.logger.log('✅ Bot launched'));
   }
 }

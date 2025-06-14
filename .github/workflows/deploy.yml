@@ -1,0 +1,20 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prevent secret leaks
+        uses: yankcrime/scan-secrets@v2
+
+      - name: Railway up
+        uses: railwayapp/cli-action@v1
+        with:
+          cmd: railway up --detach
+          env: production

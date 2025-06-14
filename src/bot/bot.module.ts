@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { BotService } from './bot.service';
-import { OpenaiService } from '../openai/openai.service';
 
 @Module({
-  providers: [BotService, OpenaiService],
+  imports: [ConfigModule],
+  providers: [BotService],
 })
 export class BotModule {}
