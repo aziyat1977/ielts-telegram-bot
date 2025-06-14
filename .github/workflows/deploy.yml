@@ -25,5 +25,7 @@ jobs:
       # 4️⃣  Build & deploy to Railway
       - name: Deploy to Railway
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}   # <-- make sure this secret exists
-        run: railway up --detach
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}   # ← make sure this secret exists
+        run: |
+          echo "🔑 RAILWAY_TOKEN length = ${#RAILWAY_TOKEN}"
+          railway up --detach
