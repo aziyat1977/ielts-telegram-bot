@@ -1,10 +1,10 @@
 """
-IELTS Bot — Essay & Speaking Scorer v2.3
+IELTS Bot — Essay & Speaking Scorer v2.4
 ────────────────────────────────────────
 • aiogram 3.x • OpenAI SDK 1.x  
-• asyncpg DB for XP + streaks  
-• Stars-only paywall (5 free → 1-time ⭐ unlock)  
-• Defaults to gpt-3.5-turbo (set OPENAI_MODEL to change)  
+• asyncpg DB  → XP & streaks  
+• Stars-only paywall (first 5 free → one-time ⭐ unlock)  
+• Default model: gpt-3.5-turbo (override with OPENAI_MODEL)  
 """
 
 import asyncio, json, logging, os, pathlib, subprocess, tempfile, uuid
@@ -19,7 +19,7 @@ from openai import AsyncOpenAI, OpenAIError
 
 # ── local helpers ──────────────────────────────────────────────
 from db    import get_pool, upsert_user, save_submission
-from quota import QuotaMiddleware                 # ⭐ middleware (no args now)
+from quota import QuotaMiddleware                 # ⭐ Stars paywall
 
 # ── 1 · Config ────────────────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
@@ -35,7 +35,7 @@ openai = AsyncOpenAI(api_key=OPENAI_KEY)
 
 bot = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 dp  = Dispatcher()
-dp.message.middleware(QuotaMiddleware())          # ← no pooled object needed
+dp.message.middleware(QuotaMiddleware())          # paywall middleware (stateless)
 
 SYSTEM_MSG = (
     "You are a certified IELTS examiner. "
@@ -90,7 +90,19 @@ async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
 async def _reply_with_score(msg: Message, band: int, tips: list[str]) -> None:
     await msg.answer(f"🏅 <b>Band {band}</b>\n• " + "\n• ".join(tips))
 
-# ── 4 · /write ------------------------------------------------
+# ── 4 · /start greeting ──────────────────────────────────────
+@dp.message(Command("start"))
+async def cmd_start(msg: Message):
+    await msg.answer(
+        "👋 Hi!\n\n"
+        "<b>How to use me:</b>\n"
+        "• <code>/write your essay text</code> — I’ll grade it.\n"
+        "• Send a <b>voice note</b> — I’ll transcribe & grade.\n"
+        f"• First 5 scores are free, then unlock with ⭐ once.\n\n"
+        "Commands: <code>/me</code> (stats) · <code>/top</code> (leaderboard)"
+    )
+
+# ── 5 · /write ------------------------------------------------
 @dp.message(Command("write"))
 async def cmd_write(msg: Message):
     essay = (msg.text.split(maxsplit=1)[1:2] or [""])[0].strip()
@@ -117,7 +129,7 @@ async def cmd_write(msg: Message):
 async def prefix_write(msg: Message):
     await cmd_write(msg)
 
-# ── 5 · voice handler ----------------------------------------
+# ── 6 · voice handler ----------------------------------------
 @dp.message(F.voice)
 async def handle_voice(msg: Message):
     mp3 = await _voice_to_mp3(bot, msg.voice.file_id)
@@ -145,7 +157,7 @@ async def handle_voice(msg: Message):
         logging.exception("Unhandled error")
         await msg.answer(f"⚠️ Unexpected error: {e}")
 
-# ── 6 · Stats commands ---------------------------------------
+# ── 7 · Stats commands ---------------------------------------
 @dp.message(Command("me"))
 async def cmd_me(msg: Message):
     async with get_pool() as pool:
@@ -171,7 +183,7 @@ async def cmd_top(msg: Message):
         f"#{i+1} @{r['username'] or 'anon'} — {r['xp']} XP" for i, r in enumerate(rows)
     ))
 
-# ── 7 · Stars payment callbacks ------------------------------
+# ── 8 · Stars payment callbacks ------------------------------
 @dp.pre_checkout_query()
 async def pre_checkout(q: PreCheckoutQuery):
     await bot.answer_pre_checkout_query(q.id, ok=True)
@@ -182,17 +194,17 @@ async def payment_success(msg: Message):
         await pool.execute("UPDATE users SET is_premium=TRUE WHERE id=$1", msg.from_user.id)
     await msg.answer("✅ Unlimited scoring unlocked – thank you!")
 
-# ── 8 · Heart-beat / fallback --------------------------------
+# ── 9 · Heart-beat / fallback -------------------------------
 @dp.message(F.text)
 async def echo(msg: Message):
     with suppress(TelegramBadRequest):
         await msg.answer("👋 Hello from <a href='https://fly.io'>Fly.io</a>!")
 
-# ── 9 · Entrypoint -------------------------------------------
+# ── Entrypoint -----------------------------------------------
 async def main() -> None:
     logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    await dp.start_polling(bot, allowed_updates=["message", "edited_message"])
+    await dp.start_polling(bot, allowed_updates=["message", "edited_message", "pre_checkout_query"])
 
 if __name__ == "__main__":
     asyncio.run(main())
