@@ -1,0 +1,23 @@
+# fly.toml — IELTS bot (long-polling)
+# Docs: https://fly.io/docs/reference/configuration/
+
+app = "ieltsbot"
+primary_region = "fra"
+
+[build]
+  # change if your Dockerfile lives elsewhere
+  dockerfile = "Dockerfile"
+
+# ── Runtime processes ───────────────────────────────────────────
+# Fly treats “app” as the health-check target. Long-polling bots
+# don’t open any ports, so we omit the [[services]]/http_service
+# section entirely.
+[processes]
+  app = "python main.py"
+
+# ── VM sizing ───────────────────────────────────────────────────
+[[vm]]
+  cpus     = 1          # shared-cpu-1x (free tier)
+  memory   = "256mb"    # plenty for aiogram + GPT calls
+  cpu_kind = "shared"
+
