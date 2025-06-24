@@ -1,10 +1,11 @@
 """
-IELTS Bot — Essay & Speaking Scorer v2.4
+IELTS Bot — Essay & Speaking Scorer v2.5
 ────────────────────────────────────────
 • aiogram 3.x   • OpenAI SDK 1.x
 • asyncpg DB  → XP & streaks
 • Stars-only paywall (first 5 free → one-time ⭐ unlock)
 • Default model: gpt-3.5-turbo (override with OPENAI_MODEL)
+• NEW: /ping health endpoint on :8080 for Fly checks
 """
 
 import asyncio, json, logging, os, pathlib, subprocess, tempfile, uuid
@@ -20,6 +21,28 @@ from openai import AsyncOpenAI, OpenAIError
 # ── local helpers ──────────────────────────────────────────────
 from db    import get_pool, upsert_user, save_submission
 from quota import QuotaMiddleware                 # ⭐ Stars paywall
+
+# ── 0 · tiny health server ────────────────────────────────────
+async def _start_health_server() -> None:
+    """
+    Serves 200 OK on GET /ping at 0.0.0.0:8080.
+    Keeps Fly’s HTTP health-check green without extra deps.
+    """
+    async def _handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
+        request_line = await reader.readline()            # e.g. b"GET /ping HTTP/1.1\r\n"
+        if b"GET /ping" in request_line:
+            writer.write(b"HTTP/1.1 200 OK\r\n"
+                         b"Content-Length: 3\r\n"
+                         b"Connection: close\r\n\r\nOK\n")
+        else:                                             # anything else → 404
+            writer.write(b"HTTP/1.1 404 Not Found\r\n"
+                         b"Content-Length: 9\r\n"
+                         b"Connection: close\r\n\r\nNot Found")
+        await writer.drain()
+        writer.close()
+
+    server = await asyncio.start_server(_handler, "0.0.0.0", 8080)
+    asyncio.create_task(server.serve_forever())           # background task
 
 # ── 1 · Config ────────────────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
@@ -218,7 +241,8 @@ async def main() -> None:
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
-    await dp.start_polling(bot)  # default update types (fix applied)
+    await _start_health_server()          #  ← health server
+    await dp.start_polling(bot)           #  ← bot polling
 
 if __name__ == "__main__":
     asyncio.run(main())
