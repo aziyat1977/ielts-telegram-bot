@@ -1,5 +1,5 @@
 """
-IELTS Bot — Essay & Speaking Scorer v2.5
+IELTS Bot — Essay & Speaking Scorer v2.6
 ────────────────────────────────────────
 • aiogram 3.x   • OpenAI SDK 1.x
 • asyncpg DB  → XP & streaks
@@ -20,29 +20,26 @@ from openai import AsyncOpenAI, OpenAIError
 
 # ── local helpers ──────────────────────────────────────────────
 from db    import get_pool, upsert_user, save_submission
-from quota import QuotaMiddleware                 # ⭐ Stars paywall
+from quota  import QuotaMiddleware                # ⭐ Stars paywall
 
 # ── 0 · tiny health server ────────────────────────────────────
 async def _start_health_server() -> None:
-    """
-    Serves 200 OK on GET /ping at 0.0.0.0:8080.
-    Keeps Fly’s HTTP health-check green without extra deps.
-    """
+    """Serve 200 OK on GET /ping at 0.0.0.0:8080 so Fly health-check passes."""
     async def _handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
-        request_line = await reader.readline()            # e.g. b"GET /ping HTTP/1.1\r\n"
-        if b"GET /ping" in request_line:
-            writer.write(b"HTTP/1.1 200 OK\r\n"
-                         b"Content-Length: 3\r\n"
-                         b"Connection: close\r\n\r\nOK\n")
-        else:                                             # anything else → 404
-            writer.write(b"HTTP/1.1 404 Not Found\r\n"
-                         b"Content-Length: 9\r\n"
-                         b"Connection: close\r\n\r\nNot Found")
+        req = await reader.readline()
+        if b"GET /ping" in req:
+            writer.write(
+                b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\nConnection: close\r\n\r\nOK\n"
+            )
+        else:
+            writer.write(
+                b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\nConnection: close\r\n\r\nNot Found"
+            )
         await writer.drain()
         writer.close()
 
     server = await asyncio.start_server(_handler, "0.0.0.0", 8080)
-    asyncio.create_task(server.serve_forever())           # background task
+    asyncio.create_task(server.serve_forever())
 
 # ── 1 · Config ────────────────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
@@ -140,7 +137,7 @@ async def cmd_write(msg: Message):
         async with get_pool() as pool:
             await upsert_user(pool, msg.from_user)
             await save_submission(
-                pool, msg.from_user, "essay", band, tips,
+                pool, msg.from_user, "essay", band, json.dumps(tips),  # ➜ serialize list
                 word_count=len(essay.split())
             )
     except OpenAIError as e:
@@ -174,7 +171,7 @@ async def handle_voice(msg: Message):
         async with get_pool() as pool:
             await upsert_user(pool, msg.from_user)
             await save_submission(
-                pool, msg.from_user, "speaking", band, tips,
+                pool, msg.from_user, "speaking", band, json.dumps(tips),  # ➜ serialize list
                 seconds=msg.voice.duration
             )
     except OpenAIError as e:
@@ -241,8 +238,8 @@ async def main() -> None:
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
-    await _start_health_server()          #  ← health server
-    await dp.start_polling(bot)           #  ← bot polling
+    await _start_health_server()        # start /ping server
+    await dp.start_polling(bot)         # long-polling
 
 if __name__ == "__main__":
     asyncio.run(main())
