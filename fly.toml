@@ -1,20 +1,25 @@
 # fly.toml — IELTS Bot (long-polling + health check)
-# Reference: https://fly.io/docs/reference/configuration/
 
 app            = "ieltsbot"
 primary_region = "fra"
 
 [build]
-  dockerfile = "Dockerfile"              # adjust if Dockerfile lives elsewhere
+  dockerfile = "Dockerfile"
 
-# ── Runtime ────────────────────────────────────────────────────
+# ── Runtime process ──────────────────────────────────────────
 [processes]
-  app = "python main.py"                 # long-polling bot entrypoint
+  app = "python main.py"
 
-# ── Health check (exposes :8080/ping) ─────────────────────────
+# ── Health-check service on :8080 ────────────────────────────
 [[services]]
   internal_port = 8080
   protocol      = "tcp"
+  processes     = ["app"]        # ← links this service to the “app” proc
+
+  # NO public exposure: empty handlers disables routing
+  [[services.ports]]
+    handlers = []                # keep port private
+    port     = 80                # dummy (required by validator)
 
   [[services.http_checks]]
     path         = "/ping"
@@ -24,8 +29,8 @@ primary_region = "fra"
     interval     = "15s"
     timeout      = "2s"
 
-# ── VM sizing ─────────────────────────────────────────────────
+# ── VM sizing ────────────────────────────────────────────────
 [[vm]]
-  cpus     = 1          # shared-cpu-1x (free tier)
+  cpus     = 1
   memory   = "256mb"
   cpu_kind = "shared"
