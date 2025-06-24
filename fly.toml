@@ -10,16 +10,16 @@ primary_region = "fra"
 [processes]
   app = "python main.py"
 
-# ── Health-check service on :8080 ────────────────────────────
+# ── Private health-check service on :8080 ───────────────────
 [[services]]
-  internal_port = 8080
+  internal_port = 8080          # matches _start_health_server()
   protocol      = "tcp"
-  processes     = ["app"]        # ← links this service to the “app” proc
+  processes     = ["app"]
 
-  # NO public exposure: empty handlers disables routing
+  # keep the port private (no handlers → not routed to the Internet)
   [[services.ports]]
-    handlers = []                # keep port private
-    port     = 80                # dummy (required by validator)
+    handlers = []
+    port     = 8080             # advertise the same port we listen on
 
   [[services.http_checks]]
     path         = "/ping"
