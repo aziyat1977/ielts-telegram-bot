@@ -1,11 +1,12 @@
 """
-IELTS Bot — Essay & Speaking Scorer v2.6
+IELTS Bot — Essay & Speaking Scorer v2.7
 ────────────────────────────────────────
 • aiogram 3.x   • OpenAI SDK 1.x
 • asyncpg DB  → XP & streaks
 • Stars-only paywall (first 5 free → one-time ⭐ unlock)
 • Default model: gpt-3.5-turbo (override with OPENAI_MODEL)
-• NEW: /ping health endpoint on :8080 for Fly checks
+• Health check: GET /ping on :8080
+• NEW: welcome “Try sample” / “Try voice” inline buttons
 """
 
 import asyncio, json, logging, os, pathlib, subprocess, tempfile, uuid
@@ -15,33 +16,33 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.client.default import DefaultBotProperties
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command
-from aiogram.types import Message, PreCheckoutQuery
+from aiogram.types import (
+    Message,
+    PreCheckoutQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    CallbackQuery,
+)
 from openai import AsyncOpenAI, OpenAIError
 
-# ── local helpers ──────────────────────────────────────────────
-from db    import get_pool, upsert_user, save_submission
-from quota  import QuotaMiddleware                # ⭐ Stars paywall
+# ── local helpers ────────────────────────────────────────────
+from db import get_pool, upsert_user, save_submission
+from quota import QuotaMiddleware                 # ⭐ Stars paywall
 
-# ── 0 · tiny health server ────────────────────────────────────
+# ── 0 · tiny /ping health server ────────────────────────────
 async def _start_health_server() -> None:
-    """Serve 200 OK on GET /ping at 0.0.0.0:8080 so Fly health-check passes."""
-    async def _handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
-        req = await reader.readline()
-        if b"GET /ping" in req:
-            writer.write(
-                b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\nConnection: close\r\n\r\nOK\n"
-            )
+    async def _handler(r: asyncio.StreamReader, w: asyncio.StreamWriter):
+        if b"GET /ping" in await r.readline():
+            w.write(b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\n\r\nOK\n")
         else:
-            writer.write(
-                b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\nConnection: close\r\n\r\nNot Found"
-            )
-        await writer.drain()
-        writer.close()
+            w.write(b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\n\r\nNot Found")
+        await w.drain()
+        w.close()
 
-    server = await asyncio.start_server(_handler, "0.0.0.0", 8080)
-    asyncio.create_task(server.serve_forever())
+    srv = await asyncio.start_server(_handler, "0.0.0.0", 8080)
+    asyncio.create_task(srv.serve_forever())
 
-# ── 1 · Config ────────────────────────────────────────────────
+# ── 1 · Config ──────────────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 MODEL_NAME = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
@@ -52,10 +53,9 @@ if not OPENAI_KEY:
     raise RuntimeError("❌ OPENAI_API_KEY is missing")
 
 openai = AsyncOpenAI(api_key=OPENAI_KEY)
-
-bot = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
-dp  = Dispatcher()
-dp.message.middleware(QuotaMiddleware())          # paywall middleware
+bot    = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
+dp     = Dispatcher()
+dp.message.middleware(QuotaMiddleware())
 
 SYSTEM_MSG = (
     "You are a certified IELTS examiner. "
@@ -63,12 +63,12 @@ SYSTEM_MSG = (
     "EXACTLY three concise bullet-point tips for improvement."
 )
 
-# ── 2 · voice → mp3 helper ───────────────────────────────────
+# ── 2 · voice → mp3 helper ─────────────────────────────────
 async def _voice_to_mp3(bot_obj: Bot, file_id: str) -> pathlib.Path:
-    tg_file  = await bot_obj.get_file(file_id)
-    tmp      = pathlib.Path(tempfile.gettempdir())
-    oga      = tmp / f"{uuid.uuid4()}.oga"
-    mp3      = oga.with_suffix(".mp3")
+    tg_file = await bot_obj.get_file(file_id)
+    tmp     = pathlib.Path(tempfile.gettempdir())
+    oga     = tmp / f"{uuid.uuid4()}.oga"
+    mp3     = oga.with_suffix(".mp3")
 
     await bot_obj.download_file(tg_file.file_path, destination=oga)
     subprocess.run(
@@ -78,7 +78,7 @@ async def _voice_to_mp3(bot_obj: Bot, file_id: str) -> pathlib.Path:
     oga.unlink(missing_ok=True)
     return mp3
 
-# ── 3 · OpenAI scorer ────────────────────────────────────────
+# ── 3 · OpenAI scorer ──────────────────────────────────────
 async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
     rsp = await openai.chat.completions.create(
         model=MODEL_NAME,
@@ -110,10 +110,10 @@ async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
 async def _reply_with_score(msg: Message, band: int, tips: list[str]) -> None:
     await msg.answer(f"🏅 <b>Band {band}</b>\n• " + "\n• ".join(tips))
 
-# ── 4 · /start greeting ──────────────────────────────────────
+# ── 4 · /start greeting + inline keyboard ──────────────────
 @dp.message(Command("start"))
-async def cmd_start(msg: Message):
-    await msg.answer(
+async def cmd_start(msg: Message) -> None:
+    greet = (
         "👋 Hi!\n\n"
         "<b>How to use me:</b>\n"
         "• <code>/write your essay text</code> — I’ll grade it.\n"
@@ -122,7 +122,29 @@ async def cmd_start(msg: Message):
         "Commands: <code>/me</code> (stats) · <code>/top</code> (leaderboard)"
     )
 
-# ── 5 · /write ------------------------------------------------
+    kb = InlineKeyboardMarkup(inline_keyboard=[[
+        InlineKeyboardButton("📝 Try sample essay", callback_data="demo_essay"),
+        InlineKeyboardButton("🎙️ Try voice demo",  callback_data="demo_voice"),
+    ]])
+
+    await msg.answer(greet, reply_markup=kb)
+
+@dp.callback_query(F.data == "demo_essay")
+async def cb_demo_essay(q: CallbackQuery) -> None:
+    await q.answer()
+    await q.message.answer(
+        "/write Nowadays more and more people decide to live alone. "
+        "Do the advantages of this trend outweigh its disadvantages?"
+    )
+
+@dp.callback_query(F.data == "demo_voice")
+async def cb_demo_voice(q: CallbackQuery) -> None:
+    await q.answer()
+    await q.message.answer(
+        "📌 Send me any short voice note (5-10 s) and I’ll show you how the speaking scorer works!"
+    )
+
+# ── 5 · /write ---------------------------------------------
 @dp.message(Command("write"))
 async def cmd_write(msg: Message):
     essay = (msg.text.split(maxsplit=1)[1:2] or [""])[0].strip()
@@ -137,7 +159,7 @@ async def cmd_write(msg: Message):
         async with get_pool() as pool:
             await upsert_user(pool, msg.from_user)
             await save_submission(
-                pool, msg.from_user, "essay", band, json.dumps(tips),  # ➜ serialize list
+                pool, msg.from_user, "essay", band, json.dumps(tips),
                 word_count=len(essay.split())
             )
     except OpenAIError as e:
@@ -151,7 +173,7 @@ async def cmd_write(msg: Message):
 async def prefix_write(msg: Message):
     await cmd_write(msg)
 
-# ── 6 · voice handler ----------------------------------------
+# ── 6 · voice handler --------------------------------------
 @dp.message(F.voice)
 async def handle_voice(msg: Message):
     mp3 = await _voice_to_mp3(bot, msg.voice.file_id)
@@ -171,7 +193,7 @@ async def handle_voice(msg: Message):
         async with get_pool() as pool:
             await upsert_user(pool, msg.from_user)
             await save_submission(
-                pool, msg.from_user, "speaking", band, json.dumps(tips),  # ➜ serialize list
+                pool, msg.from_user, "speaking", band, json.dumps(tips),
                 seconds=msg.voice.duration
             )
     except OpenAIError as e:
@@ -181,13 +203,12 @@ async def handle_voice(msg: Message):
         logging.exception("Unhandled error")
         await msg.answer(f"⚠️ Unexpected error: {e}")
 
-# ── 7 · Stats commands ---------------------------------------
+# ── 7 · Stats commands -------------------------------------
 @dp.message(Command("me"))
 async def cmd_me(msg: Message):
     async with get_pool() as pool:
         row = await pool.fetchrow(
-            "SELECT xp, streak, is_premium FROM users WHERE id = $1",
-            msg.from_user.id,
+            "SELECT xp, streak, is_premium FROM users WHERE id=$1", msg.from_user.id
         )
     if not row:
         return await msg.answer("No stats yet—send an essay or voice note first!")
@@ -213,7 +234,7 @@ async def cmd_top(msg: Message):
         )
     )
 
-# ── 8 · Stars payment callbacks ------------------------------
+# ── 8 · Stars payment callbacks ----------------------------
 @dp.pre_checkout_query()
 async def pre_checkout(q: PreCheckoutQuery):
     await bot.answer_pre_checkout_query(q.id, ok=True)
@@ -226,20 +247,18 @@ async def payment_success(msg: Message):
         )
     await msg.answer("✅ Unlimited scoring unlocked – thank you!")
 
-# ── 9 · Heart-beat / fallback -------------------------------
+# ── 9 · fallback -------------------------------------------
 @dp.message(F.text)
 async def echo(msg: Message):
     with suppress(TelegramBadRequest):
         await msg.answer("👋 Hello from <a href='https://fly.io'>Fly.io</a>!")
 
-# ── Entrypoint -----------------------------------------------
+# ── Entrypoint ---------------------------------------------
 async def main() -> None:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    )
-    await _start_health_server()        # start /ping server
-    await dp.start_polling(bot)         # long-polling
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+    await _start_health_server()
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
