@@ -4,4 +4,6 @@ openai==1.88.0      # latest as of 17 Jun 2025
 aiohttp==3.*        # future web-hook/server utils
 uvloop==0.19.* ; sys_platform != "win32"   # faster event loop on Linux
 asyncpg==0.29.0
+pytest-asyncio>=0.23
+
 
