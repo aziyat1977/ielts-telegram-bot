@@ -32,5 +32,5 @@ primary_region = "fra"
 # ── VM sizing ────────────────────────────────────────────────
 [[vm]]
   cpus     = 1
-  memory   = "256mb"
+  memory   = "512mb"
   cpu_kind = "shared"
