@@ -1,12 +1,12 @@
 """
 IELTS Bot — Essay & Speaking Scorer  v2.8
 ──────────────────────────────────────────
-• aiogram 3.x   • OpenAI SDK 1.x
+• aiogram 3.x • OpenAI SDK 1.x
 • asyncpg DB → XP & streaks
-• Stars pay-wall → plans & credits (first 5 free)
+• Stars pay-wall → credit plans (first 5 free)
 • Default LLM  : gpt-3.5-turbo (override OPENAI_MODEL)
-• Health-check  : GET /ping on :8080
-• Welcome demo buttons + plans menu
+• Health-check : GET /ping on :8080
+• Demo buttons + /plans menu
 """
 
 import asyncio, json, logging, os, pathlib, subprocess, tempfile, uuid
@@ -27,21 +27,14 @@ from openai import AsyncOpenAI, OpenAIError
 
 # ── local helpers ───────────────────────────────────────────
 from db    import get_pool, upsert_user, save_submission
-from quota import QuotaMiddleware                              # ⭐ pay-wall
+from quota import QuotaMiddleware            # ⭐ pay-wall middleware
+from plans import PLANS                      # 💳 price-table
 # -----------------------------------------------------------
 
-# ✨ Plans (Stars price → credits)
-PLANS = {
-    "starter":  {"stars": 15,  "credits": 50},
-    "plus":     {"stars": 45,  "credits": 200},
-    "premium":  {"stars": 90,  "credits": 500},
-}
-
-# 0 · tiny /ping health-server ──────────────────────────────
+# ── tiny /ping health-server ───────────────────────────────
 async def _start_health_server() -> None:
     async def _handler(r: asyncio.StreamReader, w: asyncio.StreamWriter):
-        line = await r.readline()
-        if b"GET /ping" in line:
+        if b"GET /ping" in await r.readline():
             w.write(b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\n\r\nOK\n")
         else:
             w.write(b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\n\r\nNot Found")
@@ -51,7 +44,7 @@ async def _start_health_server() -> None:
     srv = await asyncio.start_server(_handler, "0.0.0.0", 8080)
     asyncio.create_task(srv.serve_forever())
 
-# 1 · Config ------------------------------------------------
+# ── 1 · Config ─────────────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 MODEL_NAME = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
@@ -72,7 +65,7 @@ SYSTEM_MSG = (
     "EXACTLY three concise bullet-point tips for improvement."
 )
 
-# 2 · voice → mp3 helper ------------------------------------
+# ── 2 · voice → mp3 helper ─────────────────────────────────
 async def _voice_to_mp3(bot_obj: Bot, file_id: str) -> pathlib.Path:
     tg_file = await bot_obj.get_file(file_id)
     tmp     = pathlib.Path(tempfile.gettempdir())
@@ -87,7 +80,7 @@ async def _voice_to_mp3(bot_obj: Bot, file_id: str) -> pathlib.Path:
     oga.unlink(missing_ok=True)
     return mp3
 
-# 3 · OpenAI scorer -----------------------------------------
+# ── 3 · OpenAI scorer ──────────────────────────────────────
 async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
     rsp = await openai.chat.completions.create(
         model=MODEL_NAME,
@@ -100,7 +93,7 @@ async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "band":     {"type": "integer", "minimum": 1, "maximum": 9},
+                    "band": {"type": "integer", "minimum": 1, "maximum": 9},
                     "feedback": {
                         "type": "array",
                         "items": {"type": "string"},
@@ -119,34 +112,43 @@ async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
 async def _reply_with_score(msg: Message, band: int, tips: list[str]) -> None:
     await msg.answer(f"🏅 <b>Band {band}</b>\n• " + "\n• ".join(tips))
 
-    # Low-credit warning
+    # low-credit warning
     async with get_pool() as pool:
-        credits = await pool.fetchval(
-            "SELECT credits_left FROM users WHERE id=$1", msg.from_user.id
-        )
+        credits = await pool.fetchval("SELECT credits_left FROM users WHERE id=$1",
+                                      msg.from_user.id)
     if credits is not None and credits <= 5:
-        await msg.answer(
-            f"⚠️ Only {credits} credit(s) left. Use /plans to top-up."
-        )
+        await msg.answer(f"⚠️ Only {credits} credit(s) left. Use /plans to top-up.")
 
-# 4 · /start greeting + inline keyboard ---------------------
+# ── 4 · UI helpers ─────────────────────────────────────────
+def _plans_keyboard() -> InlineKeyboardMarkup:
+    buttons = [
+        InlineKeyboardButton(
+            f"📝 Starter – {PLANS['starter']['credits']} scores (⭐{PLANS['starter']['stars']})",
+            callback_data="buy_starter"),
+        InlineKeyboardButton(
+            f"⚡ Plus – {PLANS['plus']['credits']} (⭐{PLANS['plus']['stars']})",
+            callback_data="buy_plus"),
+        InlineKeyboardButton(
+            f"🚀 Premium – {PLANS['premium']['credits']} (⭐{PLANS['premium']['stars']})",
+            callback_data="buy_premium"),
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=[[b] for b in buttons])
+
+# ── 5 · /start & demo buttons ──────────────────────────────
 @dp.message(Command("start"))
-async def cmd_start(msg: Message) -> None:
+async def cmd_start(msg: Message):
     greet = (
         "👋 Hi!\n\n"
         "<b>How to use me:</b>\n"
         "• <code>/write &lt;essay&gt;</code> — instant band & tips\n"
         "• Send a voice note — instant speaking score\n"
-        "• First 5 scores are free, then pick a credit plan ⭐\n\n"
+        "• First 5 scores are free, then top-up with ⭐ plans\n\n"
         "Commands: <code>/me</code> · <code>/top</code> · <code>/plans</code>"
     )
-
-    kb = InlineKeyboardMarkup(
-        inline_keyboard=[[ 
-            InlineKeyboardButton("📝 Try sample essay", callback_data="demo_essay"),
-            InlineKeyboardButton("🎙️ Try voice demo",  callback_data="demo_voice"),
-        ]]
-    )
+    kb = InlineKeyboardMarkup(inline_keyboard=[[
+        InlineKeyboardButton("📝 Try sample essay", callback_data="demo_essay"),
+        InlineKeyboardButton("🎙️ Try voice demo",  callback_data="demo_voice"),
+    ]])
     await msg.answer(greet, reply_markup=kb)
 
 @dp.callback_query(F.data == "demo_essay")
@@ -161,27 +163,10 @@ async def cb_demo_essay(q: CallbackQuery):
 async def cb_demo_voice(q: CallbackQuery):
     await q.answer()
     await q.message.answer(
-        "📌 Send any short voice note (5-10 s) and I’ll demo the speaking scorer!"
+        "📌 Send a short voice note (5-10 s) and I’ll show you the speaking scorer!"
     )
 
-# 4-b · plan purchase menu ----------------------------------
-def _plans_keyboard() -> InlineKeyboardMarkup:
-    buttons = [
-        InlineKeyboardButton(
-            f"📝 Starter – {PLANS['starter']['credits']} scores (⭐{PLANS['starter']['stars']})",
-            callback_data="buy_starter"
-        ),
-        InlineKeyboardButton(
-            f"⚡ Plus – {PLANS['plus']['credits']} (⭐{PLANS['plus']['stars']})",
-            callback_data="buy_plus"
-        ),
-        InlineKeyboardButton(
-            f"🚀 Premium – {PLANS['premium']['credits']} (⭐{PLANS['premium']['stars']})",
-            callback_data="buy_premium"
-        ),
-    ]
-    return InlineKeyboardMarkup(inline_keyboard=[[b] for b in buttons])
-
+# ── 6 · plans menu & purchase flow ─────────────────────────
 @dp.message(Command("plans"))
 async def cmd_plans(msg: Message):
     await msg.answer("🚀 Pick a plan:", reply_markup=_plans_keyboard())
@@ -192,17 +177,17 @@ async def cb_buy_plan(q: CallbackQuery):
     info  = PLANS[plan]
     payload = f"plan:{plan}:{info['stars']}"
     await bot.send_invoice(
-        chat_id       = q.message.chat.id,
-        title         = f"{plan.title()} plan",
-        description   = f"{info['credits']} scores (essay or speaking)",
-        payload       = payload,
-        provider_token= "STARS",
-        currency      = "XTR",
-        prices        = [{"label": plan.title(), "amount": info["stars"]}],
+        chat_id=q.message.chat.id,
+        title=f"{plan.title()} plan",
+        description=f"{info['credits']} scores (essay or speaking)",
+        payload=payload,
+        provider_token="STARS",
+        currency="XTR",
+        prices=[{"label": plan.title(), "amount": info["stars"]}],
     )
     await q.answer()
 
-# 5 · /write -------------------------------------------------
+# ── 7 · /write ---------------------------------------------
 @dp.message(Command("write"))
 async def cmd_write(msg: Message):
     essay = (msg.text.split(maxsplit=1)[1:2] or [""])[0].strip()
@@ -220,7 +205,6 @@ async def cmd_write(msg: Message):
                 pool, msg.from_user, "essay", band, json.dumps(tips),
                 word_count=len(essay.split()),
             )
-            # decrement credit
             await pool.execute(
                 "UPDATE users SET credits_left = GREATEST(credits_left - 1, 0) WHERE id=$1",
                 msg.from_user.id,
@@ -236,7 +220,7 @@ async def cmd_write(msg: Message):
 async def prefix_write(msg: Message):
     await cmd_write(msg)
 
-# 6 · voice handler -----------------------------------------
+# ── 8 · voice handler --------------------------------------
 @dp.message(F.voice)
 async def handle_voice(msg: Message):
     mp3 = await _voice_to_mp3(bot, msg.voice.file_id)
@@ -270,12 +254,13 @@ async def handle_voice(msg: Message):
         logging.exception("Unhandled error")
         await msg.answer(f"⚠️ Unexpected error: {e}")
 
-# 7 · stats commands ----------------------------------------
+# ── 9 · stats / leaderboard --------------------------------
 @dp.message(Command("me"))
 async def cmd_me(msg: Message):
     async with get_pool() as pool:
         row = await pool.fetchrow(
-            "SELECT xp, streak, credits_left FROM users WHERE id=$1", msg.from_user.id
+            "SELECT xp, streak, credits_left FROM users WHERE id=$1",
+            msg.from_user.id,
         )
     if not row:
         return await msg.answer("No stats yet — send an essay or voice note first!")
@@ -289,28 +274,24 @@ async def cmd_me(msg: Message):
 @dp.message(Command("top"))
 async def cmd_top(msg: Message):
     async with get_pool() as pool:
-        rows = await pool.fetch(
-            "SELECT username, xp FROM users ORDER BY xp DESC LIMIT 10"
-        )
+        rows = await pool.fetch("SELECT username, xp FROM users ORDER BY xp DESC LIMIT 10")
     if not rows:
         return await msg.answer("Nobody on the board yet — be the first!")
-
     await msg.answer(
         "\n".join(f"#{i+1} @{r['username'] or 'anon'} — {r['xp']} XP"
                   for i, r in enumerate(rows))
     )
 
-# 8 · Stars payment callbacks -------------------------------
+# ──10 · Stars payment hook ---------------------------------
 @dp.pre_checkout_query()
 async def pre_checkout(q: PreCheckoutQuery):
     await bot.answer_pre_checkout_query(q.id, ok=True)
 
 @dp.message(F.successful_payment)
 async def payment_success(msg: Message):
-    # payload: "plan:starter:15"
+    # payload looks like  "plan:starter:15"
     _, plan, _ = msg.successful_payment.invoice_payload.split(":")
     info = PLANS[plan]
-
     async with get_pool() as pool:
         await pool.execute(
             """
@@ -323,22 +304,18 @@ async def payment_success(msg: Message):
             """,
             msg.from_user.id, plan, info["credits"],
         )
-    await msg.answer(
-        f"✅ {plan.title()} activated – {info['credits']} credits added!"
-    )
+    await msg.answer(f"✅ {plan.title()} activated — {info['credits']} credits added!")
 
-# 9 · fallback / hello --------------------------------------
+# ──11 · fallback / hello -----------------------------------
 @dp.message(F.text)
 async def echo(msg: Message):
     with suppress(TelegramBadRequest):
         await msg.answer("👋 Hello from <a href='https://fly.io'>Fly.io</a>!")
 
-# Entrypoint ------------------------------------------------
+# ── Entrypoint ---------------------------------------------
 async def main() -> None:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    )
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     await _start_health_server()
     await dp.start_polling(bot)
 
