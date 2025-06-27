@@ -1,7 +1,7 @@
 """
 IELTS Bot — Essay & Speaking Scorer v2.7.1
 ──────────────────────────────────────────
-• aiogram 3.x  • OpenAI SDK 1.x
+• aiogram 3.x   • OpenAI SDK 1.x
 • asyncpg DB → XP & streaks
 • Stars-only pay-wall (first 5 free → one-time ⭐ unlock)
 • Default LLM : gpt-3.5-turbo (override with OPENAI_MODEL)
@@ -28,28 +28,26 @@ from openai import AsyncOpenAI, OpenAIError
 # ── local helpers ───────────────────────────────────────────
 from db    import get_pool, upsert_user, save_submission
 from quota import QuotaMiddleware                      # ⭐ pay-wall
+# -----------------------------------------------------------
 
-
-# ── 0 · tiny /ping health-server ───────────────────────────
+# 0 · tiny /ping health-server ──────────────────────────────
 async def _start_health_server() -> None:
     async def _handler(r: asyncio.StreamReader, w: asyncio.StreamWriter):
-        first_line = await r.readline()
-        w.write(
-            b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\n\r\nOK\n"
-            if b"GET /ping" in first_line
-            else b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\n\r\nNot Found"
-        )
+        line = await r.readline()
+        if b"GET /ping" in line:
+            w.write(b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\n\r\nOK\n")
+        else:
+            w.write(b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\n\r\nNot Found")
         await w.drain()
         w.close()
 
     srv = await asyncio.start_server(_handler, "0.0.0.0", 8080)
     asyncio.create_task(srv.serve_forever())
 
-
-# ── 1 · Config ─────────────────────────────────────────────
-TOKEN       = os.getenv("TELEGRAM_TOKEN")
-OPENAI_KEY  = os.getenv("OPENAI_API_KEY")
-MODEL_NAME  = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+# 1 · Config ------------------------------------------------
+TOKEN      = os.getenv("TELEGRAM_TOKEN")
+OPENAI_KEY = os.getenv("OPENAI_API_KEY")
+MODEL_NAME = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
 
 if not TOKEN:
     raise RuntimeError("❌ TELEGRAM_TOKEN is missing")
@@ -59,15 +57,15 @@ if not OPENAI_KEY:
 openai = AsyncOpenAI(api_key=OPENAI_KEY)
 bot    = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 dp     = Dispatcher()
-dp.message.middleware(QuotaMiddleware())              # attach pay-wall
+dp.message.middleware(QuotaMiddleware())
 
 SYSTEM_MSG = (
     "You are a certified IELTS examiner. "
-    "Score the given text (or speech transcript) from 1-9 and return "
+    "Score the given text (or speech transcript) from 1–9 and return "
     "EXACTLY three concise bullet-point tips for improvement."
 )
 
-# ── 2 · voice → mp3 helper ────────────────────────────────
+# 2 · voice → mp3 helper ------------------------------------
 async def _voice_to_mp3(bot_obj: Bot, file_id: str) -> pathlib.Path:
     tg_file = await bot_obj.get_file(file_id)
     tmp     = pathlib.Path(tempfile.gettempdir())
@@ -82,8 +80,7 @@ async def _voice_to_mp3(bot_obj: Bot, file_id: str) -> pathlib.Path:
     oga.unlink(missing_ok=True)
     return mp3
 
-
-# ── 3 · OpenAI scorer ─────────────────────────────────────
+# 3 · OpenAI scorer -----------------------------------------
 async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
     rsp = await openai.chat.completions.create(
         model=MODEL_NAME,
@@ -112,32 +109,28 @@ async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
     data = json.loads(rsp.choices[0].message.function_call.arguments)
     return max(1, min(9, data["band"])), data["feedback"]
 
-
 async def _reply_with_score(msg: Message, band: int, tips: list[str]) -> None:
     await msg.answer(f"🏅 <b>Band {band}</b>\n• " + "\n• ".join(tips))
 
-
-# ── 4 · /start greeting + inline keyboard ─────────────────
+# 4 · /start greeting + inline keyboard ---------------------
 @dp.message(Command("start"))
 async def cmd_start(msg: Message) -> None:
     greet = (
         "👋 Hi!\n\n"
         "<b>How to use me:</b>\n"
-        "• <code>/write &lt;your essay&gt;</code> — instant band & tips.\n"
-        "• Send a voice note — instant speaking score.\n"
-        "• First 5 scores are free, then one-time ⭐ unlock.\n\n"
+        "• <code>/write your essay…</code> — instant band & tips\n"
+        "• Send a voice note — instant speaking score\n"
+        "• First 5 scores are free, then one-time ⭐ unlock\n\n"
         "Commands: <code>/me</code> (stats) · <code>/top</code> (leader-board)"
     )
 
-    kb = InlineKeyboardMarkup.inline_keyboard([
-        [
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[[
             InlineKeyboardButton(text="📝 Try sample essay", callback_data="demo_essay"),
             InlineKeyboardButton(text="🎙️ Try voice demo",  callback_data="demo_voice"),
-        ]
-    ])
-
+        ]]
+    )
     await msg.answer(greet, reply_markup=kb)
-
 
 @dp.callback_query(F.data == "demo_essay")
 async def cb_demo_essay(q: CallbackQuery) -> None:
@@ -147,23 +140,21 @@ async def cb_demo_essay(q: CallbackQuery) -> None:
         "Do the advantages of this trend outweigh its disadvantages?"
     )
 
-
 @dp.callback_query(F.data == "demo_voice")
 async def cb_demo_voice(q: CallbackQuery) -> None:
     await q.answer()
     await q.message.answer(
-        "📌 Send me any short voice note (5-10 s) and I’ll show you the speaking scorer!"
+        "📌 Send any short voice note (5-10 s) and I’ll demo the speaking scorer!"
     )
 
-
-# ── 5 · /write --------------------------------------------
+# 5 · /write -------------------------------------------------
 @dp.message(Command("write"))
 async def cmd_write(msg: Message):
     essay = (msg.text.split(maxsplit=1)[1:2] or [""])[0].strip()
     if not essay:
         return await msg.answer("✍️ Paste the essay on the same line after /write …")
 
-    await msg.answer("⏳ Scoring … please wait")
+    await msg.answer("⏳ Scoring… please wait")
     try:
         band, tips = await _get_band_and_tips(essay)
         await _reply_with_score(msg, band, tips)
@@ -181,17 +172,15 @@ async def cmd_write(msg: Message):
         logging.exception("Unhandled error")
         await msg.answer(f"⚠️ Unexpected error: {e}")
 
-
 @dp.message(F.text.startswith("/write "))
 async def prefix_write(msg: Message):
     await cmd_write(msg)
 
-
-# ── 6 · voice handler -------------------------------------
+# 6 · voice handler -----------------------------------------
 @dp.message(F.voice)
 async def handle_voice(msg: Message):
     mp3 = await _voice_to_mp3(bot, msg.voice.file_id)
-    await msg.answer("⏳ Transcribing …")
+    await msg.answer("⏳ Transcribing…")
     try:
         transcript = await openai.audio.transcriptions.create(
             model="whisper-1", file=open(mp3, "rb"), response_format="text",
@@ -199,7 +188,7 @@ async def handle_voice(msg: Message):
     finally:
         mp3.unlink(missing_ok=True)
 
-    await msg.answer("⏳ Scoring … please wait")
+    await msg.answer("⏳ Scoring… please wait")
     try:
         band, tips = await _get_band_and_tips(transcript)
         await _reply_with_score(msg, band, tips)
@@ -217,8 +206,7 @@ async def handle_voice(msg: Message):
         logging.exception("Unhandled error")
         await msg.answer(f"⚠️ Unexpected error: {e}")
 
-
-# ── 7 · stats commands ------------------------------------
+# 7 · stats commands ----------------------------------------
 @dp.message(Command("me"))
 async def cmd_me(msg: Message):
     async with get_pool() as pool:
@@ -226,44 +214,35 @@ async def cmd_me(msg: Message):
             "SELECT xp, streak, is_premium FROM users WHERE id=$1", msg.from_user.id,
         )
     if not row:
-        return await msg.answer("No stats yet—send an essay or voice note first!")
+        return await msg.answer("No stats yet — send an essay or voice note first!")
 
     premium = "✔️" if row["is_premium"] else "❌"
     await msg.answer(
-        f"🏅 XP : <b>{row['xp']}</b>\n"
-        f"🔥 Streak : <b>{row['streak']}</b> day(s)\n"
-        f"💎 Premium : {premium}"
+        f"🏅 XP: <b>{row['xp']}</b>\n"
+        f"🔥 Streak: <b>{row['streak']}</b> day(s)\n"
+        f"💎 Premium: {premium}"
     )
-
 
 @dp.message(Command("top"))
 async def cmd_top(msg: Message):
     async with get_pool() as pool:
-        rows = await pool.fetch(
-            "SELECT username, xp FROM users ORDER BY xp DESC LIMIT 10"
-        )
+        rows = await pool.fetch("SELECT username, xp FROM users ORDER BY xp DESC LIMIT 10")
     if not rows:
-        return await msg.answer("Nobody on the board yet—be the first!")
+        return await msg.answer("Nobody on the board yet — be the first!")
 
     await msg.answer(
-        "\n".join(
-            f"#{i+1} @{r['username'] or 'anon'} — {r['xp']} XP"
-            for i, r in enumerate(rows)
-        )
+        "\n".join(f"#{i+1} @{r['username'] or 'anon'} — {r['xp']} XP"
+                  for i, r in enumerate(rows))
     )
 
-
-# ── 8 · Stars payment callbacks ---------------------------
+# 8 · Stars payment callbacks -------------------------------
 @dp.pre_checkout_query()
 async def pre_checkout(q: PreCheckoutQuery):
     await bot.answer_pre_checkout_query(q.id, ok=True)
 
-
 @dp.message(F.successful_payment)
 async def payment_success(msg: Message):
-    """
-    Mark the user as premium **even if they had no row yet**.
-    """
+    # works even if the user had no row yet
     async with get_pool() as pool:
         await pool.execute(
             """
@@ -274,17 +253,15 @@ async def payment_success(msg: Message):
             msg.from_user.id,
             msg.from_user.username,
         )
-    await msg.answer("✅ Unlimited scoring unlocked – thank you!")
+    await msg.answer("✅ Unlimited scoring unlocked — thank you!")
 
-
-# ── 9 · fallback / hello -----------------------------------
+# 9 · fallback / hello --------------------------------------
 @dp.message(F.text)
 async def echo(msg: Message):
     with suppress(TelegramBadRequest):
         await msg.answer("👋 Hello from <a href='https://fly.io'>Fly.io</a>!")
 
-
-# ── Entrypoint --------------------------------------------
+# Entrypoint ------------------------------------------------
 async def main() -> None:
     logging.basicConfig(
         level=logging.INFO,
@@ -292,7 +269,6 @@ async def main() -> None:
     )
     await _start_health_server()
     await dp.start_polling(bot)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
