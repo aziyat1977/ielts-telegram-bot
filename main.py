@@ -1,12 +1,12 @@
 """
-IELTS Bot — Essay & Speaking Scorer v2.7.1
+IELTS Bot — Essay & Speaking Scorer  v2.8
 ──────────────────────────────────────────
 • aiogram 3.x   • OpenAI SDK 1.x
 • asyncpg DB → XP & streaks
-• Stars-only pay-wall (first 5 free → one-time ⭐ unlock)
-• Default LLM : gpt-3.5-turbo (override with OPENAI_MODEL)
-• Health-check : GET /ping on :8080
-• NEW : welcome “Try sample” / “Try voice” inline buttons
+• Stars pay-wall → plans & credits (first 5 free)
+• Default LLM  : gpt-3.5-turbo (override OPENAI_MODEL)
+• Health-check  : GET /ping on :8080
+• Welcome demo buttons + plans menu
 """
 
 import asyncio, json, logging, os, pathlib, subprocess, tempfile, uuid
@@ -27,8 +27,15 @@ from openai import AsyncOpenAI, OpenAIError
 
 # ── local helpers ───────────────────────────────────────────
 from db    import get_pool, upsert_user, save_submission
-from quota import QuotaMiddleware                      # ⭐ pay-wall
+from quota import QuotaMiddleware                              # ⭐ pay-wall
 # -----------------------------------------------------------
+
+# ✨ Plans (Stars price → credits)
+PLANS = {
+    "starter":  {"stars": 15,  "credits": 50},
+    "plus":     {"stars": 45,  "credits": 200},
+    "premium":  {"stars": 90,  "credits": 500},
+}
 
 # 0 · tiny /ping health-server ──────────────────────────────
 async def _start_health_server() -> None:
@@ -112,28 +119,38 @@ async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
 async def _reply_with_score(msg: Message, band: int, tips: list[str]) -> None:
     await msg.answer(f"🏅 <b>Band {band}</b>\n• " + "\n• ".join(tips))
 
+    # Low-credit warning
+    async with get_pool() as pool:
+        credits = await pool.fetchval(
+            "SELECT credits_left FROM users WHERE id=$1", msg.from_user.id
+        )
+    if credits is not None and credits <= 5:
+        await msg.answer(
+            f"⚠️ Only {credits} credit(s) left. Use /plans to top-up."
+        )
+
 # 4 · /start greeting + inline keyboard ---------------------
 @dp.message(Command("start"))
 async def cmd_start(msg: Message) -> None:
     greet = (
         "👋 Hi!\n\n"
         "<b>How to use me:</b>\n"
-        "• <code>/write your essay…</code> — instant band & tips\n"
+        "• <code>/write &lt;essay&gt;</code> — instant band & tips\n"
         "• Send a voice note — instant speaking score\n"
-        "• First 5 scores are free, then one-time ⭐ unlock\n\n"
-        "Commands: <code>/me</code> (stats) · <code>/top</code> (leader-board)"
+        "• First 5 scores are free, then pick a credit plan ⭐\n\n"
+        "Commands: <code>/me</code> · <code>/top</code> · <code>/plans</code>"
     )
 
     kb = InlineKeyboardMarkup(
-        inline_keyboard=[[
-            InlineKeyboardButton(text="📝 Try sample essay", callback_data="demo_essay"),
-            InlineKeyboardButton(text="🎙️ Try voice demo",  callback_data="demo_voice"),
+        inline_keyboard=[[ 
+            InlineKeyboardButton("📝 Try sample essay", callback_data="demo_essay"),
+            InlineKeyboardButton("🎙️ Try voice demo",  callback_data="demo_voice"),
         ]]
     )
     await msg.answer(greet, reply_markup=kb)
 
 @dp.callback_query(F.data == "demo_essay")
-async def cb_demo_essay(q: CallbackQuery) -> None:
+async def cb_demo_essay(q: CallbackQuery):
     await q.answer()
     await q.message.answer(
         "/write Nowadays more and more people decide to live alone. "
@@ -141,11 +158,49 @@ async def cb_demo_essay(q: CallbackQuery) -> None:
     )
 
 @dp.callback_query(F.data == "demo_voice")
-async def cb_demo_voice(q: CallbackQuery) -> None:
+async def cb_demo_voice(q: CallbackQuery):
     await q.answer()
     await q.message.answer(
         "📌 Send any short voice note (5-10 s) and I’ll demo the speaking scorer!"
     )
+
+# 4-b · plan purchase menu ----------------------------------
+def _plans_keyboard() -> InlineKeyboardMarkup:
+    buttons = [
+        InlineKeyboardButton(
+            f"📝 Starter – {PLANS['starter']['credits']} scores (⭐{PLANS['starter']['stars']})",
+            callback_data="buy_starter"
+        ),
+        InlineKeyboardButton(
+            f"⚡ Plus – {PLANS['plus']['credits']} (⭐{PLANS['plus']['stars']})",
+            callback_data="buy_plus"
+        ),
+        InlineKeyboardButton(
+            f"🚀 Premium – {PLANS['premium']['credits']} (⭐{PLANS['premium']['stars']})",
+            callback_data="buy_premium"
+        ),
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=[[b] for b in buttons])
+
+@dp.message(Command("plans"))
+async def cmd_plans(msg: Message):
+    await msg.answer("🚀 Pick a plan:", reply_markup=_plans_keyboard())
+
+@dp.callback_query(F.data.startswith("buy_"))
+async def cb_buy_plan(q: CallbackQuery):
+    plan  = q.data.replace("buy_", "")
+    info  = PLANS[plan]
+    payload = f"plan:{plan}:{info['stars']}"
+    await bot.send_invoice(
+        chat_id       = q.message.chat.id,
+        title         = f"{plan.title()} plan",
+        description   = f"{info['credits']} scores (essay or speaking)",
+        payload       = payload,
+        provider_token= "STARS",
+        currency      = "XTR",
+        prices        = [{"label": plan.title(), "amount": info["stars"]}],
+    )
+    await q.answer()
 
 # 5 · /write -------------------------------------------------
 @dp.message(Command("write"))
@@ -164,6 +219,11 @@ async def cmd_write(msg: Message):
             await save_submission(
                 pool, msg.from_user, "essay", band, json.dumps(tips),
                 word_count=len(essay.split()),
+            )
+            # decrement credit
+            await pool.execute(
+                "UPDATE users SET credits_left = GREATEST(credits_left - 1, 0) WHERE id=$1",
+                msg.from_user.id,
             )
     except OpenAIError as e:
         logging.error("OPENAI error → %s", e)
@@ -199,6 +259,10 @@ async def handle_voice(msg: Message):
                 pool, msg.from_user, "speaking", band, json.dumps(tips),
                 seconds=msg.voice.duration,
             )
+            await pool.execute(
+                "UPDATE users SET credits_left = GREATEST(credits_left - 1, 0) WHERE id=$1",
+                msg.from_user.id,
+            )
     except OpenAIError as e:
         logging.error("OPENAI error → %s", e)
         await msg.answer(f"⚠️ OpenAI error: {e}")
@@ -211,22 +275,23 @@ async def handle_voice(msg: Message):
 async def cmd_me(msg: Message):
     async with get_pool() as pool:
         row = await pool.fetchrow(
-            "SELECT xp, streak, is_premium FROM users WHERE id=$1", msg.from_user.id,
+            "SELECT xp, streak, credits_left FROM users WHERE id=$1", msg.from_user.id
         )
     if not row:
         return await msg.answer("No stats yet — send an essay or voice note first!")
 
-    premium = "✔️" if row["is_premium"] else "❌"
     await msg.answer(
         f"🏅 XP: <b>{row['xp']}</b>\n"
         f"🔥 Streak: <b>{row['streak']}</b> day(s)\n"
-        f"💎 Premium: {premium}"
+        f"💳 Credits left: <b>{row['credits_left']}</b>"
     )
 
 @dp.message(Command("top"))
 async def cmd_top(msg: Message):
     async with get_pool() as pool:
-        rows = await pool.fetch("SELECT username, xp FROM users ORDER BY xp DESC LIMIT 10")
+        rows = await pool.fetch(
+            "SELECT username, xp FROM users ORDER BY xp DESC LIMIT 10"
+        )
     if not rows:
         return await msg.answer("Nobody on the board yet — be the first!")
 
@@ -242,18 +307,25 @@ async def pre_checkout(q: PreCheckoutQuery):
 
 @dp.message(F.successful_payment)
 async def payment_success(msg: Message):
-    # works even if the user had no row yet
+    # payload: "plan:starter:15"
+    _, plan, _ = msg.successful_payment.invoice_payload.split(":")
+    info = PLANS[plan]
+
     async with get_pool() as pool:
         await pool.execute(
             """
-            INSERT INTO users (id, username, is_premium)
-            VALUES ($1, $2, TRUE)
-            ON CONFLICT (id) DO UPDATE SET is_premium = TRUE
+            INSERT INTO users(id, plan, credits_left, activated_at)
+            VALUES ($1,$2,$3,NOW())
+            ON CONFLICT(id) DO UPDATE
+              SET plan=$2,
+                  credits_left = users.credits_left + $3,
+                  activated_at = NOW();
             """,
-            msg.from_user.id,
-            msg.from_user.username,
+            msg.from_user.id, plan, info["credits"],
         )
-    await msg.answer("✅ Unlimited scoring unlocked — thank you!")
+    await msg.answer(
+        f"✅ {plan.title()} activated – {info['credits']} credits added!"
+    )
 
 # 9 · fallback / hello --------------------------------------
 @dp.message(F.text)

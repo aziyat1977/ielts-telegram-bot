@@ -1,75 +1,65 @@
 # quota.py — Telegram Stars pay-wall middleware
 #
-# First N scorings are free; afterwards the bot offers a one-time ⭐ unlock.
-# No external PSP is needed — simply use provider_token="STARS".
+# First N scorings are free; after that the user must have credits.
+# provider_token="STARS" keeps everything inside Telegram.
 
 import os
 from aiogram import BaseMiddleware
-from aiogram.types import Message
+from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 
-from db import get_pool                             # new pool each call
+from db import get_pool
+from main import PLANS                         # reuse price table
 
-FREE_LIMIT  = int(os.getenv("PAYWALL_FREE_LIMIT", 5))      # free attempts
-PRICE_STARS = int(os.getenv("PRICE_STARS", 300))           # set via Fly secret
+FREE_LIMIT = int(os.getenv("PAYWALL_FREE_LIMIT", 5))
 
-# ── Friendly, on-brand upsell copy (HTML-safe) ─────────────────────────
 STOP_MSG = (
-    "🔒 That was your {limit}ᵗʰ free score.\n"      # unicode superscript (no <sup>)
-    "Drop a ⭐ once to unlock <b>unlimited feedback</b> – "
-    "<i>cheaper than a coffee!</i>"
+    "🔒 That was your {limit}ᵗʰ free score.\n"
+    "Pick a credit pack to keep getting feedback:"
 )
 
+def _plans_keyboard() -> InlineKeyboardMarkup:
+    from aiogram.utils.keyboard import InlineKeyboardBuilder  # lazy import
+    kb = InlineKeyboardBuilder()
+    for plan, info in PLANS.items():
+        kb.button(
+            text=f"{plan.title()} – {info['credits']} (⭐{info['stars']})",
+            callback_data=f"buy_{plan}",
+        )
+        kb.adjust(1)
+    return kb.as_markup()
 
 class QuotaMiddleware(BaseMiddleware):
-    """
-    • Each user may submit up to FREE_LIMIT items for automatic scoring.
-    • Once the quota is reached, send a gentle upsell + Telegram-Stars
-      invoice and block further processing until payment succeeds.
-    """
-
     async def __call__(self, handler, event: Message, data):
-        # 0 · Skip updates that shouldn’t trigger the pay-wall
+        # ignore non-message or payment updates
         if (
-            not isinstance(event, Message)         # not a message
-            or not event.from_user                 # no sender (e.g. channel post)
-            or event.successful_payment is not None  # payment confirmation
+            not isinstance(event, Message)
+            or not event.from_user
+            or event.successful_payment is not None
         ):
             return await handler(event, data)
 
-        user_id = event.from_user.id
+        uid = event.from_user.id
 
-        # 1 · Usage & premium status
         async with get_pool() as pool:
             row = await pool.fetchrow(
                 """
-                SELECT is_premium,
-                       (SELECT COUNT(*) FROM submissions WHERE user_id = $1) AS used
-                  FROM users
-                 WHERE id = $1
+                SELECT credits_left,
+                       (SELECT COUNT(*) FROM submissions WHERE user_id=$1) AS used
+                  FROM users WHERE id=$1
                 """,
-                user_id,
+                uid,
             )
 
-        is_premium = row and row["is_premium"]
-        used        = row["used"] if row else 0
+        credits_left = row["credits_left"] if row else 0
+        used         = row["used"] if row else 0
 
-        # 2 · Still allowed or already premium → pass through
-        if is_premium or used < FREE_LIMIT:
+        if credits_left > 0 or used < FREE_LIMIT:
             return await handler(event, data)
 
-        # 3 · Quota exhausted → upsell & block
-        await event.answer(STOP_MSG.format(limit=FREE_LIMIT), parse_mode="HTML")
-
-        payload = f"unlim:{user_id}:{PRICE_STARS}"
-        await event.bot.send_invoice(
-            chat_id        = event.chat.id,
-            title          = "IELTS Bot · Unlimited scoring",
-            description    = "One-time purchase — lifetime essay & speaking scores.",
-            payload        = payload,
-            provider_token = "STARS",   # Telegram Stars
-            currency       = "XTR",     # fixed code for Stars
-            prices         = [{"label": "Unlimited", "amount": PRICE_STARS}],
+        # out of credits → upsell
+        await event.answer(
+            STOP_MSG.format(limit=FREE_LIMIT),
+            parse_mode="HTML",
+            reply_markup=_plans_keyboard(),
         )
-
-        # stop here -- don’t run the original handler
-        return
+        return  # swallow the update
