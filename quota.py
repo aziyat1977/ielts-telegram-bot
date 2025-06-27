@@ -1,26 +1,40 @@
-# quota.py · Stars-only paywall middleware
+# quota.py — Telegram Stars pay-wall middleware
+#
+# Keeps the first N scorings free, then offers a one-time ⭐ unlock.
+# Requires *no* external payment provider: just pass provider_token="STARS".
+
 import os
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 
-from db import get_pool                       # fresh pool each call
+from db import get_pool                   # fresh pool every call
 
-FREE_LIMIT  = int(os.getenv("PAYWALL_FREE_LIMIT", 5))
-PRICE_STARS = int(os.getenv("PRICE_STARS", 300))   # set via Fly secret
+FREE_LIMIT  = int(os.getenv("PAYWALL_FREE_LIMIT", 5))   # first N scores are free
+PRICE_STARS = int(os.getenv("PRICE_STARS", 300))        # set via Fly secret
+
+# ── Friendly, on-brand upsell copy ─────────────────────────────
+STOP_MSG = (
+    "🔒 That was your {limit}<sup>th</sup> free score.\n"
+    "Drop a ⭐ once to unlock <b>unlimited feedback</b> – "
+    "<i>cheaper than a coffee!</i>"
+)
 
 
 class QuotaMiddleware(BaseMiddleware):
     """
-    • Lets every user score up to FREE_LIMIT submissions.
-    • After that, blocks the request and sends a Telegram-Stars invoice.
+    • Each user gets up to FREE_LIMIT auto-scorings.
+    • Once exhausted, send a gentle upsell message plus a Telegram-Stars
+      invoice and block further handling until payment succeeds.
     """
 
     async def __call__(self, handler, event: Message, data):
-        # Ignore non-message updates or bot/system senders
+        # Ignore non-message updates or posts without a sender
         if not isinstance(event, Message) or not event.from_user:
             return await handler(event, data)
 
-        # ── 1 · Fetch usage & premium flag ───────────────────────
+        user_id = event.from_user.id
+
+        # ── 1 · Fetch usage & premium flag ──────────────────────
         async with get_pool() as pool:
             row = await pool.fetchrow(
                 """
@@ -29,25 +43,28 @@ class QuotaMiddleware(BaseMiddleware):
                   FROM users
                  WHERE id = $1
                 """,
-                event.from_user.id,
+                user_id,
             )
 
         is_premium = row and row["is_premium"]
         used        = row["used"] if row else 0
 
-        # ── 2 · Allow if under quota or already premium ─────────
+        # ── 2 · Still within quota or already premium? → OK ────
         if is_premium or used < FREE_LIMIT:
             return await handler(event, data)
 
-        # ── 3 · Otherwise send Stars invoice & block ────────────
-        payload = f"unlim:{event.from_user.id}:{PRICE_STARS}"
+        # ── 3 · Quota exhausted → upsell & block ───────────────
+        await event.answer(STOP_MSG.format(limit=FREE_LIMIT), parse_mode="HTML")
+
+        payload = f"unlim:{user_id}:{PRICE_STARS}"
         await event.bot.send_invoice(
-            chat_id      = event.chat.id,
-            title        = "IELTS Bot · Unlimited Scoring",
-            description  = "One-time purchase — unlimited essay & speaking scores.",
-            payload      = payload,
-            provider_token = "",          # empty ⇒ Telegram Stars
-            currency       = "XTR",       # fixed currency code for Stars
-            prices         = [{"label": "Unlimited", "amount": PRICE_STARS}],
+            chat_id         = event.chat.id,
+            title           = "IELTS Bot · Unlimited scoring",
+            description     = "One-time purchase — lifetime essay & speaking scores.",
+            payload         = payload,
+            provider_token  = "STARS",   # ← REQUIRED for Telegram Stars
+            currency        = "XTR",     # fixed code for Stars
+            prices          = [{"label": "Unlimited", "amount": PRICE_STARS}],
         )
-        return  # stops the original handler
+        # Swallow the update so no scoring happens
+        return
