@@ -10,17 +10,22 @@ primary_region = "fra"
 [processes]
   app = "python main.py"
 
-# ── Private health-check service on :8080 ───────────────────
+# ── Service & health-check on :8080 ──────────────────────────
 [[services]]
   internal_port = 8080          # matches _start_health_server()
   protocol      = "tcp"
   processes     = ["app"]
 
-  # keep the port private (no handlers → not routed to the Internet)
+  # ── Public endpoints ───────────────────────────────────────
   [[services.ports]]
-    handlers = []
-    port     = 8080             # advertise the same port we listen on
+    handlers = ["http"]         # :80  → HTTP
+    port     = 80
 
+  [[services.ports]]
+    handlers = ["tls", "http"]  # :443 → HTTPS (auto-TLS)
+    port     = 443
+
+  # ── Health check (same port) ───────────────────────────────
   [[services.http_checks]]
     path         = "/ping"
     method       = "get"
