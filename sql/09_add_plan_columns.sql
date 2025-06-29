@@ -1,0 +1,4 @@
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS plan          TEXT        DEFAULT 'free',
+  ADD COLUMN IF NOT EXISTS credits_left  INT         DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS activated_at  TIMESTAMPTZ;
