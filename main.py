@@ -30,6 +30,7 @@ from db    import get_pool, upsert_user, save_submission
 from quota import QuotaMiddleware
 from plans  import PLANS
 
+
 # ── Config / Globals ───────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
@@ -42,8 +43,11 @@ if not OPENAI_KEY:
 
 openai = AsyncOpenAI(api_key=OPENAI_KEY)
 bot    = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
-dp     = Dispatcher()                           # ← now defined early
+
+# Dispatcher must exist BEFORE decorators are evaluated 👇
+dp = Dispatcher()
 dp.message.middleware(QuotaMiddleware())
+
 
 SYSTEM_MSG = (
     "You are a certified IELTS examiner. "
@@ -51,7 +55,7 @@ SYSTEM_MSG = (
     "EXACTLY three concise bullet-point tips for improvement."
 )
 
-# ── /ping health server (unchanged) ─────────────────────────
+# ── /ping health server ────────────────────────────────────
 async def _start_health_server() -> None:
     async def _handler(r: asyncio.StreamReader, w: asyncio.StreamWriter):
         first = await r.readline()
@@ -59,22 +63,26 @@ async def _start_health_server() -> None:
             w.write(b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\n\r\nOK\n")
         else:
             w.write(b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\n\r\nNot Found")
-        await w.drain(); w.close()
+        await w.drain()
+        w.close()
+
     srv = await asyncio.start_server(_handler, "0.0.0.0", 8080)
     asyncio.create_task(srv.serve_forever())
 
+
 # ── UI helpers ─────────────────────────────────────────────
 def _plans_keyboard() -> InlineKeyboardMarkup:
-    rows: list[list[InlineKeyboardButton]] = [
-        [InlineKeyboardButton(
-            f"{plan.title()} – {info['credits']} scores (⭐{info['stars']})",
-            callback_data=f"buy_{plan}"
-        )]
-        for plan, info in PLANS.items()
-    ]
+    """Inline-keyboard with paid credit packs."""
+    rows = [[
+        InlineKeyboardButton(
+            text=f"{plan.title()} – {info['credits']} scores (⭐{info['stars']})",
+            callback_data=f"buy_{plan}",
+        )
+    ] for plan, info in PLANS.items()]
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
-# ── /start & demo buttons ─────────────────────────────────
+
+# ── /start + demo buttons ─────────────────────────────────
 @dp.message(Command("start"))
 async def cmd_start(msg: Message) -> None:
     greet = (
@@ -91,6 +99,7 @@ async def cmd_start(msg: Message) -> None:
     ]])
     await msg.answer(greet, reply_markup=kb)
 
+
 @dp.callback_query(F.data == "demo_essay")
 async def cb_demo_essay(q: CallbackQuery) -> None:
     await q.answer()
@@ -99,6 +108,7 @@ async def cb_demo_essay(q: CallbackQuery) -> None:
         "Do the advantages of this trend outweigh its disadvantages?"
     )
 
+
 @dp.callback_query(F.data == "demo_voice")
 async def cb_demo_voice(q: CallbackQuery) -> None:
     await q.answer()
@@ -106,15 +116,17 @@ async def cb_demo_voice(q: CallbackQuery) -> None:
         "📌 Send a short voice note (5-10 s) and I’ll show you the speaking scorer!"
     )
 
-# ── /plans & purchase flow (unchanged) ─────────────────────
+
+# ── /plans & purchase flow (unchanged) ────────────────────
 @dp.message(Command("plans"))
 async def cmd_plans(msg: Message):
     await msg.answer("🚀 Pick a plan:", reply_markup=_plans_keyboard())
 
+
 @dp.callback_query(F.data.startswith("buy_"))
 async def cb_buy_plan(q: CallbackQuery):
-    plan  = q.data.removeprefix("buy_")
-    info  = PLANS[plan]
+    plan = q.data.removeprefix("buy_")
+    info = PLANS[plan]
     payload = f"plan:{plan}:{info['stars']}"
     await bot.send_invoice(
         chat_id=q.message.chat.id,
@@ -127,10 +139,22 @@ async def cb_buy_plan(q: CallbackQuery):
     )
     await q.answer()
 
-# ── voice ↔ mp3 helper, OpenAI scorer, /write handler,
-#    voice handler, stats commands, payment hook, fallback,
-#    and main() remain **identical** to the previous version.
-# -----------------------------------------------------------
+
+# ── voice→mp3, scorer, /write, voice handler, stats, payment,
+#    fallback, etc. are **unchanged** from v2.8.1
+#    (keep those sections exactly as they were).              
+
+
+# ── Entrypoint ─────────────────────────────────────────────
+async def main() -> None:
+    """Bootstraps the bot, health server, and polling loop."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+    await _start_health_server()
+    await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
