@@ -1,11 +1,50 @@
-import os, textwrap
+import os, textwrap, json
 from aiogram import types, Bot
+from openai import AsyncOpenAI, OpenAIError
 
 from db     import get_pool, save_submission, upsert_user
-from scorer import score_essay_or_voice_async
-from botsrc.tts_client import TTSClient   # local wrapper
+from botsrc.tts_client import TTSClient
 
 
+# ── OpenAI set-up ──────────────────────────────────────────
+OPENAI_KEY  = os.environ["OPENAI_API_KEY"]
+MODEL_NAME  = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+openai      = AsyncOpenAI(api_key=OPENAI_KEY)
+SYSTEM_MSG  = (
+    "You are a certified IELTS examiner. Score the text from 1-9 and return "
+    "EXACTLY three concise bullet-point tips for improvement."
+)
+
+
+async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
+    rsp = await openai.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[{"role": "system", "content": SYSTEM_MSG},
+                  {"role": "user",   "content": text}],
+        functions=[{
+            "name": "score",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "band": {"type": "integer", "minimum": 1, "maximum": 9},
+                    "feedback": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "minItems": 3, "maxItems": 3,
+                    },
+                },
+                "required": ["band", "feedback"],
+            },
+        }],
+        function_call={"name": "score"},
+        max_tokens=400,
+    )
+    data = json.loads(rsp.choices[0].message.function_call.arguments)
+    band = max(1, min(9, data["band"]))
+    return band, data["feedback"]
+
+
+# ── Voice-ID helper ───────────────────────────────────────
 def _voice_for_plan(plan: str | None) -> str:
     plan = (plan or "").lower()
     return {
@@ -15,41 +54,45 @@ def _voice_for_plan(plan: str | None) -> str:
     }.get(plan, os.getenv("VOICE_ID_STARTER"))
 
 
+# ── /tutor handler ────────────────────────────────────────
 async def handle_tutor(message: types.Message, bot: Bot) -> None:
-    # 1️⃣  Pull text from the replied message
+    # 1. get text from reply
     if message.reply_to_message and message.reply_to_message.voice:
-        from asr import transcribe_async                 # your Whisper util
+        from asr import transcribe_async            # your Whisper util
         raw_text = await transcribe_async(message.reply_to_message.voice)
     elif message.reply_to_message and message.reply_to_message.text:
         raw_text = message.reply_to_message.text
     else:
         await message.answer("Reply to an essay or voice note so I can tutor you!")
-        return                                            # nothing to do
+        return
 
-    # 2️⃣  Run IELTS scoring + summary
-    res = await score_essay_or_voice_async(raw_text)
-    summary = textwrap.shorten(
-        f"{res['band']} / 9.0. {res['tips']}",
-        width=500,
-        placeholder="…"
-    )
+    # 2. IELTS scoring
+    try:
+        band, tips = await _get_band_and_tips(raw_text)
+    except OpenAIError as e:
+        await message.answer(f"⚠️ OpenAI error: {e}")
+        return
 
-    # 3️⃣  Text-to-speech
+    summary = textwrap.shorten(f"{band} / 9.0. {' '.join(tips)}",
+                               width=500, placeholder="…")
+
+    # 3. TTS
     tts   = TTSClient()
-    audio = await tts.synth(text=summary, voice_id=_voice_for_plan(res.get("plan")))
+    audio = await tts.synth(text=summary,
+                            voice_id=_voice_for_plan(None))   # plan-based later
 
-    # 4️⃣  Send voice note back to the user
+    # 4. send audio
     await bot.send_voice(
         chat_id = message.chat.id,
         voice   = types.InputFile.from_buffer(audio, filename="feedback.mp3"),
-        caption = "Here’s my audio feedback (-1 ⭐).",
+        caption = "Here’s my audio feedback (-1 ⭐)."
     )
 
-    # 5️⃣  DB bookkeeping: save submission & deduct 1 credit
+    # 5. DB bookkeeping & credit- -1
     async with get_pool() as pool:
         await upsert_user(pool, message.from_user)
         await save_submission(
-            pool, message.from_user, "audio_tutor", res["band"], str(res["tips"]),
+            pool, message.from_user, "audio_tutor", band, json.dumps(tips),
             seconds=0
         )
         await pool.execute(
@@ -63,6 +106,5 @@ async def handle_tutor(message: types.Message, bot: Bot) -> None:
             message.from_user.id,
         )
 
-    # 6️⃣  Low-credit warning
     if credits is not None and credits <= 5:
         await message.answer(f"⚠️ Only {credits} credit(s) left. Use /plans to top-up.")
