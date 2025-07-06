@@ -29,7 +29,9 @@ from openai import AsyncOpenAI, OpenAIError
 from db    import get_pool, upsert_user, save_submission
 from quota import QuotaMiddleware
 from plans import PLANS
-from botsrc.tutor import handle_tutor         # audio-tutor handler
+from botsrc.tutor import handle_tutor
+from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go         # audio-tutor handler
 
 # ── Config / Globals ──────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
@@ -46,7 +48,10 @@ bot    = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 
 dp = Dispatcher()
 dp.message.middleware(QuotaMiddleware())
-dp.message(Command("tutor"))(handle_tutor)
+dp.message(Command('tutor'))(handle_tutor)
+dp.message(Command('tutor_text'))(cmd_tutor_text)
+dp.callback_query()(process_callback)
+dp.message(Command('text_go'))(cmd_text_go)
 
 SYSTEM_MSG = (
     "You are a certified IELTS examiner. "
@@ -219,3 +224,5 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+
