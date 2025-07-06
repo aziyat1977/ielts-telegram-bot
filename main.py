@@ -29,7 +29,7 @@ from openai import AsyncOpenAI, OpenAIError
 from db    import get_pool, upsert_user, save_submission
 from quota import QuotaMiddleware
 from plans import PLANS
-from botsrc.tutor import handle_tutor
+from botsrc.tutor import handle_tutor`nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
 from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
 from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go         # audio-tutor handler
 
