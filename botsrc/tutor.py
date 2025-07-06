@@ -1,5 +1,6 @@
 import os, textwrap, json
 from aiogram import types, Bot
+from aiogram.types import BufferedInputFile
 from openai import AsyncOpenAI, OpenAIError
 
 from db     import get_pool, save_submission, upsert_user
@@ -84,7 +85,7 @@ async def handle_tutor(message: types.Message, bot: Bot) -> None:
     # 4. send audio
     await bot.send_voice(
         chat_id = message.chat.id,
-        voice   = types.InputFile.from_buffer(audio, filename="feedback.mp3"),
+        voice   = types.BufferedInputFile(audio, "feedback.mp3"),
         caption = "Here’s my audio feedback (-1 ⭐)."
     )
 
