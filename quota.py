@@ -83,3 +83,22 @@ class QuotaMiddleware(BaseMiddleware):
         )
         # Skip original handler
         return
+# ── Helper used by /tutor and /tutor_text ───────────────────────────────
+from db import get_pool
+
+async def consume_credit_if_needed(user_id: int, cost: int = 1) -> bool:
+    """
+    Returns True ⇢ credit deducted or not needed.
+    Returns False ⇢ no credits left (middleware already warned the user).
+    """
+    async with get_pool() as pool:
+        credits = await pool.fetchval("SELECT credits_left FROM users WHERE id=$1", user_id)
+        if credits is None:        # new user row not created yet
+            return True
+        if credits < cost:
+            return False
+        await pool.execute(
+            "UPDATE users SET credits_left = GREATEST(credits_left - $1, 0) WHERE id=$2",
+            cost, user_id,
+        )
+        return True
