@@ -91,7 +91,7 @@ async def cmd_text_go(msg: types.Message, bot: Bot):
       "and show corrected versions where relevant."
     )
 
-    res = await score_essay_or_voice_async(essay, system_msg=sys_prompt)
+    res = await score_essay_or_voice_async(essay)
     feedback = res["tips"] if isinstance(res["tips"], str) else "\n".join(res["tips"])
     feedback = f"<b>Predicted Band {res['band']}</b>\n\n{feedback}"
     await msg.answer(feedback, parse_mode="HTML")

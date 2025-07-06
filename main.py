@@ -94,8 +94,8 @@ async def cmd_start(msg: Message) -> None:
         "<code>/tutor</code> (audio feedback)"
     )
     kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton("📝 Try sample essay", callback_data="demo_essay"),
-        InlineKeyboardButton("🎙️ Try voice demo",  callback_data="demo_voice"),
+        InlineKeyboardButton(text="📝 Try sample essay", callback_data="demo_essay"),
+        InlineKeyboardButton(text="🎙️ Try voice demo",  callback_data="demo_voice"),
     ]])
     await msg.answer(greet, reply_markup=kb)
 
