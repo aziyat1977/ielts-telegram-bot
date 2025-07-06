@@ -1,15 +1,15 @@
-""" 
+"""
 IELTS Bot — Essay & Speaking Scorer v2.8.3
 ──────────────────────────────────────────
-• aiogram 3.x   • OpenAI SDK 1.x
-• asyncpg DB  → XP & streaks
+• aiogram 3.x  • OpenAI SDK 1.x
+• asyncpg DB → XP & streaks
 • Stars pay-wall → credit plans (first 5 free)
-• Default LLM   : gpt-3.5-turbo  (override OPENAI_MODEL)
-• Health-check  : GET /ping on :8080
-• Demo buttons  + /plans menu
+• Default LLM : gpt-3.5-turbo (override OPENAI_MODEL)
+• Health-check : GET /ping on :8080
+• Demo buttons + /plans menu
 """
 
-# ── Imports ────────────────────────────────────────────────
+# ── Imports ───────────────────────────────────────────────
 import asyncio, json, logging, os, pathlib, subprocess, tempfile, uuid
 from contextlib import suppress
 
@@ -29,11 +29,9 @@ from openai import AsyncOpenAI, OpenAIError
 from db    import get_pool, upsert_user, save_submission
 from quota import QuotaMiddleware
 from plans import PLANS
+from botsrc.tutor import handle_tutor         # audio-tutor handler
 
-from botsrc.tutor import handle_tutor        # Audio tutor handler
-# ───────────────────────────────────────────────────────────
-
-# ── Config / Globals ───────────────────────────────────────
+# ── Config / Globals ──────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 MODEL_NAME = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
@@ -46,11 +44,8 @@ if not OPENAI_KEY:
 openai = AsyncOpenAI(api_key=OPENAI_KEY)
 bot    = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 
-# Dispatcher **must** exist before any decorators trigger
 dp = Dispatcher()
 dp.message.middleware(QuotaMiddleware())
-
-# Bind /tutor
 dp.message(Command("tutor"))(handle_tutor)
 
 SYSTEM_MSG = (
@@ -59,19 +54,19 @@ SYSTEM_MSG = (
     "EXACTLY three concise bullet-point tips for improvement."
 )
 
-# ── /ping health server ───────────────────────────────────
+# ── /ping health server ──────────────────────────────────
 async def _start_health_server() -> None:
     async def _handler(r: asyncio.StreamReader, w: asyncio.StreamWriter):
         first = await r.readline()
         if b"GET /ping" in first:
-            w.write(b"HTTP/1.1 200 OK\\r\\nContent-Length: 3\\r\\n\\r\\nOK\\n")
+            w.write(b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\n\r\nOK\n")
         else:
-            w.write(b"HTTP/1.1 404 Not Found\\r\\nContent-Length: 9\\r\\n\\r\\nNot Found")
+            w.write(b"HTTP/1.1 404 Not Found\r\nContent-Length: 9\r\n\r\nNot Found")
         await w.drain(); w.close()
     srv = await asyncio.start_server(_handler, "0.0.0.0", 8080)
     asyncio.create_task(srv.serve_forever())
 
-# ── UI helpers ─────────────────────────────────────────────
+# ── UI helpers ───────────────────────────────────────────
 def _plans_keyboard() -> InlineKeyboardMarkup:
     rows = [[
         InlineKeyboardButton(
@@ -81,21 +76,21 @@ def _plans_keyboard() -> InlineKeyboardMarkup:
     ] for plan, info in PLANS.items()]
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
-# ── /start + demo buttons ─────────────────────────────────
+# ── /start & demo buttons ────────────────────────────────
 @dp.message(Command("start"))
 async def cmd_start(msg: Message) -> None:
     greet = (
-        "👋 Hi!\\n\\n"
-        "<b>How to use me:</b>\\n"
-        "• <code>/write &lt;essay&gt;</code> — instant band & tips\\n"
-        "• Send a voice note — instant speaking score\\n"
-        "• First 5 scores are free, then top-up with ⭐ plans\\n\\n"
+        "👋 Hi!\n\n"
+        "<b>How to use me:</b>\n"
+        "• <code>/write &lt;essay&gt;</code> — instant band & tips\n"
+        "• Send a voice note — instant speaking score\n"
+        "• First 5 scores are free, then top-up with ⭐ plans\n\n"
         "Commands: <code>/me</code> · <code>/top</code> · <code>/plans</code> · "
         "<code>/tutor</code> (audio feedback)"
     )
     kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="📝 Try sample essay", callback_data="demo_essay"),
-        InlineKeyboardButton(text="🎙️ Try voice demo",  callback_data="demo_voice")
+        InlineKeyboardButton("📝 Try sample essay", callback_data="demo_essay"),
+        InlineKeyboardButton("🎙️ Try voice demo",  callback_data="demo_voice"),
     ]])
     await msg.answer(greet, reply_markup=kb)
 
@@ -114,7 +109,7 @@ async def cb_demo_voice(q: CallbackQuery) -> None:
         "📌 Send a short voice note (5-10 s) and I’ll show you the speaking scorer!"
     )
 
-# ── /plans + purchase flow ────────────────────────────────
+# ── /plans + purchase flow ───────────────────────────────
 @dp.message(Command("plans"))
 async def cmd_plans(msg: Message):
     await msg.answer("🚀 Pick a plan:", reply_markup=_plans_keyboard())
@@ -125,17 +120,17 @@ async def cb_buy_plan(q: CallbackQuery):
     info   = PLANS[plan]
     payload = f"plan:{plan}:{info['stars']}"
     await bot.send_invoice(
-        chat_id       = q.message.chat.id,
-        title         = f"{plan.title()} plan",
-        description   = f"{info['credits']} scores (essay or speaking)",
-        payload       = payload,
-        provider_token= "STARS",
-        currency      = "XTR",
-        prices        = [{"label": plan.title(), "amount": info["stars"]}],
+        chat_id        = q.message.chat.id,
+        title          = f"{plan.title()} plan",
+        description    = f"{info['credits']} scores (essay or speaking)",
+        payload        = payload,
+        provider_token = "STARS",
+        currency       = "XTR",
+        prices         = [{"label": plan.title(), "amount": info["stars"]}],
     )
     await q.answer()
 
-# ── OpenAI scorer util ────────────────────────────────────
+# ── OpenAI scorer util ───────────────────────────────────
 async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
     rsp = await openai.chat.completions.create(
         model=MODEL_NAME,
@@ -160,31 +155,29 @@ async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
         max_tokens=400,
     )
     data = json.loads(rsp.choices[0].message.function_call.arguments)
-    band = max(1, min(9, data["band"]))
-    return band, data["feedback"]
+    return max(1, min(9, data["band"])), data["feedback"]
 
 async def _reply_with_score(msg: Message, band: int, tips: list[str]) -> None:
-    await msg.answer(f"🏅 <b>Band {band}</b>\\n• " + "\\n• ".join(tips))
+    await msg.answer(f"🏅 <b>Band {band}</b>\n• " + "\n• ".join(tips))
     async with get_pool() as pool:
         credits = await pool.fetchval(
-            "SELECT credits_left FROM users WHERE id=", msg.from_user.id
+            "SELECT credits_left FROM users WHERE id=$1;",
+            msg.from_user.id,
         )
     if credits is not None and credits <= 5:
         await msg.answer(f"⚠️ Only {credits} credit(s) left. Use /plans to top-up.")
 
-# ── /write (now supports reply mode) ──────────────────────
+# ── /write (inline or reply) ─────────────────────────────
 @dp.message(Command("write"))
 async def cmd_write(msg: Message):
-    # 1️⃣  Inline essay (/write <text>)
     essay = (msg.text.split(maxsplit=1)[1:2] or [""])[0].strip()
-
-    # 2️⃣  If none, but this message is a reply → grab parent text
     if not essay and msg.reply_to_message and msg.reply_to_message.text:
         essay = msg.reply_to_message.text.strip()
 
     if not essay:
         return await msg.answer(
-            "✍️ Paste the essay on the same line <b>or</b> reply to an essay with /write."
+            "✍️ Paste the essay on the same line <b>or</b> "
+            "reply to an essay with /write."
         )
 
     await msg.answer("⏳ Scoring… please wait")
@@ -201,7 +194,8 @@ async def cmd_write(msg: Message):
             await pool.execute(
                 "UPDATE users "
                 "SET credits_left = GREATEST(credits_left - 1, 0) "
-                "WHERE id=", msg.from_user.id,
+                "WHERE id=$1;",
+                msg.from_user.id,
             )
     except OpenAIError as e:
         logging.error("OPENAI error → %s", e)
@@ -210,20 +204,16 @@ async def cmd_write(msg: Message):
         logging.exception("Unhandled error")
         await msg.answer(f"⚠️ Unexpected error: {e}")
 
-# keep the prefix handler for backward compatibility
 @dp.message(F.text.startswith("/write "))
 async def prefix_write(msg: Message):
     await cmd_write(msg)
 
-# ── voice handler, stats, payments, etc. remain unchanged ─
-# (no edits needed in those sections)
+# (voice handler, stats, payments … unchanged)
 
-# ── Entrypoint --------------------------------------------
+# ── Entrypoint ───────────────────────────────────────────
 async def main() -> None:
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    )
+    logging.basicConfig(level=logging.INFO,
+                        format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     await _start_health_server()
     await dp.start_polling(bot)
 
