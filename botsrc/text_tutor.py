@@ -6,20 +6,20 @@ from scorer import score_essay_or_voice_async     # your existing helper
 
 # ========== PROMPTS ========== #
 TASK_MENU = InlineKeyboardMarkup(inline_keyboard=[[
-    InlineKeyboardButton("Task 1 – Academic 📊", callback_data="t1_a"),
-    InlineKeyboardButton("Task 1 – General ✉️", callback_data="t1_g"),
-    InlineKeyboardButton("Task 2 – Essay 📝",   callback_data="t2"),
+    InlineKeyboardButton(text="Task 1 – Academic 📊", callback_data="t1_a"),
+    InlineKeyboardButton(text="Task 1 – General ✉️", callback_data="t1_g"),
+    InlineKeyboardButton(text="Task 2 – Essay 📝",   callback_data="t2"),
 ]])
 STYLE_MENU = InlineKeyboardMarkup(inline_keyboard=[[
-    InlineKeyboardButton("Section-based",  callback_data="fb_section"),
-    InlineKeyboardButton("Sentence inline",callback_data="fb_inline"),
+    InlineKeyboardButton(text="Section-based",  callback_data="fb_section"),
+    InlineKeyboardButton(text="Sentence inline",callback_data="fb_inline"),
 ]])
 BAND_MENU = InlineKeyboardMarkup(inline_keyboard=[[
-    InlineKeyboardButton("6",   callback_data="band6"),
-    InlineKeyboardButton("6.5", callback_data="band6_5"),
-    InlineKeyboardButton("7",   callback_data="band7"),
-    InlineKeyboardButton("7.5", callback_data="band7_5"),
-    InlineKeyboardButton("8+",  callback_data="band8"),
+    InlineKeyboardButton(text="6",   callback_data="band6"),
+    InlineKeyboardButton(text="6.5", callback_data="band6_5"),
+    InlineKeyboardButton(text="7",   callback_data="band7"),
+    InlineKeyboardButton(text="7.5", callback_data="band7_5"),
+    InlineKeyboardButton(text="8+",  callback_data="band8"),
 ]])
 
 # ========== STATE CACHE ========== #
