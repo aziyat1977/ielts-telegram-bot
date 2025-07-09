@@ -46,7 +46,6 @@ openai = AsyncOpenAI(api_key=OPENAI_KEY)
 bot    = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 
 dp = Dispatcher()
-dp.message.middleware(QuotaMiddleware())
 dp.message(Command('tutor'))(handle_tutor)
 dp.message(Command('tutor_text'))(cmd_tutor_text)
 dp.callback_query()(process_callback)
@@ -170,5 +169,6 @@ async def main() -> None:
 if __name__ == "__main__":
     asyncio.run(main())
 from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+
 
 
