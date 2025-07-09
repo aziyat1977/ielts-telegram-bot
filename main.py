@@ -27,8 +27,6 @@ from aiogram.types import (
 from openai import AsyncOpenAI, OpenAIError
 
 from db    import get_pool, upsert_user, save_submission
-from quota import QuotaMiddleware
-from plans import PLANS
 from botsrc.tutor import handle_tutor
 from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
 from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
@@ -120,60 +118,6 @@ async def cb_demo_voice(q: CallbackQuery) -> None:
 async def cmd_plans(msg: Message):
     await msg.answer("🚀 Pick a plan:", reply_markup=_plans_keyboard())
 
-@dp.callback_query(F.data.startswith("buy_"))
-async def cb_buy_plan(q: CallbackQuery):
-    plan   = q.data.removeprefix("buy_")
-    info   = PLANS[plan]
-    payload = f"plan:{plan}:{info['stars']}"
-    await bot.send_invoice(
-        chat_id        = q.message.chat.id,
-        title          = f"{plan.title()} plan",
-        description    = f"{info['credits']} scores (essay or speaking)",
-        payload        = payload,
-        provider_token = "STARS",
-        currency       = "XTR",
-        prices         = [{"label": plan.title(), "amount": info["stars"]}],
-    )
-    await q.answer()
-
-# ── OpenAI scorer util ───────────────────────────────────
-async def _get_band_and_tips(text: str) -> tuple[int, list[str]]:
-    rsp = await openai.chat.completions.create(
-        model=MODEL_NAME,
-        messages=[{"role": "system", "content": SYSTEM_MSG},
-                  {"role": "user",   "content": text}],
-        functions=[{
-            "name": "score",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "band": {"type": "integer", "minimum": 1, "maximum": 9},
-                    "feedback": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "minItems": 3, "maxItems": 3,
-                    },
-                },
-                "required": ["band", "feedback"],
-            },
-        }],
-        function_call={"name": "score"},
-        max_tokens=400,
-    )
-    data = json.loads(rsp.choices[0].message.function_call.arguments)
-    return max(1, min(9, data["band"])), data["feedback"]
-
-async def _reply_with_score(msg: Message, band: int, tips: list[str]) -> None:
-    await msg.answer(f"🏅 <b>Band {band}</b>\n• " + "\n• ".join(tips))
-    async with get_pool() as pool:
-        credits = await pool.fetchval(
-            "SELECT credits_left FROM users WHERE id=$1;",
-            msg.from_user.id,
-        )
-    if credits is not None and credits <= 5:
-        await msg.answer(f"⚠️ Only {credits} credit(s) left. Use /plans to top-up.")
-
-# ── /write (inline or reply) ─────────────────────────────
 @dp.message(Command("write"))
 async def cmd_write(msg: Message):
     essay = (msg.text.split(maxsplit=1)[1:2] or [""])[0].strip()
@@ -226,4 +170,5 @@ async def main() -> None:
 if __name__ == "__main__":
     asyncio.run(main())
 from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+
 
