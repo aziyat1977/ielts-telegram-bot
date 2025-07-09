@@ -98,3 +98,10 @@ async def cmd_text_go(msg: types.Message, bot: Bot):
 
     # tidy
     _SESSION.pop(sid, None)
+@dp.callback_query(lambda c: c.data == "show_dfb")
+async def send_detailed_feedback(call: types.CallbackQuery):
+    # build & send the full section-by-section feedback
+    essay = user_state.get(call.from_user.id, "essay")
+    feedback = await build_detailed_feedback(essay)
+    await call.message.answer(feedback, parse_mode="Markdown")
+    await call.answer()  # dismiss loading spinner
