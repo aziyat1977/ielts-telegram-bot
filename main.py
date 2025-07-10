@@ -163,7 +163,7 @@ async def prefix_write(msg: Message):
 async def main() -> None:
     logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    await _start_health_server()
+    pass  # removed extra health server
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
@@ -175,3 +175,4 @@ from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
 
 
 import threading, http.server, socketserver; threading.Thread(target=lambda: socketserver.TCPServer(('0.0.0.0',8080), http.server.SimpleHTTPRequestHandler).serve_forever(),daemon=True).start()
+
