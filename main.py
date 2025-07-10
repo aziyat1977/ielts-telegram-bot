@@ -99,9 +99,11 @@ async def cmd_start(msg: Message) -> None:
         InlineKeyboardButton(text="📝 Try sample essay", callback_data="demo_essay"),
         InlineKeyboardButton(text="🎙️ Try voice demo",  callback_data="demo_voice"),
     ]])
-    await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
-
-@dp.callback_query(F.data == "demo_essay")
+    await msg.answer(
+    "✍️ Paste your essay after the command, "
+    "or simply reply to an existing essay with /write.",
+    reply_markup=PERSISTENT_KB,
+)@dp.callback_query(F.data == "demo_essay")
 async def cb_demo_essay(q: CallbackQuery) -> None:
     await q.answer()
     await q.message.answer(
@@ -119,22 +121,30 @@ async def cb_demo_voice(q: CallbackQuery) -> None:
 # ── /subscribe + purchase flow ───────────────────────────────
 @dp.message(Command("plans"))
 async def cmd_plans(msg: Message):
-    await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
-
-@dp.message(Command("write"))
+    await msg.answer(
+    "✍️ Paste your essay after the command, "
+    "or simply reply to an existing essay with /write.",
+    reply_markup=PERSISTENT_KB,
+)@dp.message(Command("write"))
 async def cmd_write(msg: Message):
     essay = (msg.text.split(maxsplit=1)[1:2] or [""])[0].strip()
     if not essay and msg.reply_to_message and msg.reply_to_message.text:
         essay = msg.reply_to_message.text.strip()
 
     if not essay:
-        return await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
-            "✍️ Paste the essay on the same line <b>or</b> "
+        return await msg.answer(
+    "✍️ Paste your essay after the command, "
+    "or simply reply to an existing essay with /write.",
+    reply_markup=PERSISTENT_KB,
+)# removed stray prompt literal
             "reply to an essay with /write."
         )
 
-    await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
-    try:
+    await msg.answer(
+    "✍️ Paste your essay after the command, "
+    "or simply reply to an existing essay with /write.",
+    reply_markup=PERSISTENT_KB,
+)try:
         band, tips = await _get_band_and_tips(essay)
         await _reply_with_score(msg, band, tips)
 
@@ -152,12 +162,17 @@ async def cmd_write(msg: Message):
             )
     except OpenAIError as e:
         logging.error("OPENAI error → %s", e)
-        await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
-    except Exception as e:
+        await msg.answer(
+    "✍️ Paste your essay after the command, "
+    "or simply reply to an existing essay with /write.",
+    reply_markup=PERSISTENT_KB,
+)except Exception as e:
         logging.exception("Unhandled error")
-        await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
-
-@dp.message(F.text.startswith("/write "))
+        await msg.answer(
+    "✍️ Paste your essay after the command, "
+    "or simply reply to an existing essay with /write.",
+    reply_markup=PERSISTENT_KB,
+)@dp.message(F.text.startswith("/write "))
 async def prefix_write(msg: Message):
     await cmd_write(msg)
 
@@ -201,3 +216,5 @@ if not globals().get("_health_started"):
         daemon=True,
     ).start()
     _health_started = True
+
+
