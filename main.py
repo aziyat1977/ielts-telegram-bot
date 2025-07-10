@@ -6,7 +6,7 @@ IELTS Bot — Essay & Speaking Scorer v2.8.3
 • Stars pay-wall → credit plans (first 5 free)
 • Default LLM : gpt-3.5-turbo (override OPENAI_MODEL)
 • Health-check : GET /ping on :8080
-• Demo buttons + /plans menu
+• Demo buttons + /subscribe menu
 """
 
 # ── Imports ───────────────────────────────────────────────
@@ -87,8 +87,8 @@ async def cmd_start(msg: Message) -> None:
         "<b>How to use me:</b>\n"
         "• <code>/write &lt;essay&gt;</code> — instant band & tips\n"
         "• Send a voice note — instant speaking score\n"
-        "• First 5 scores are free, then top-up with ⭐ plans\n\n"
-        "Commands: <code>/me</code> · <code>/top</code> · <code>/plans</code> · "
+        "• First 5 scores are free, then top-up with Payme/Click (see /subscribe)\n\n"
+        "Commands: <code>/me</code> · <code>/top</code> · <code>/subscribe</code> · "
         "<code>/tutor</code> (audio feedback)"
     )
     kb = InlineKeyboardMarkup(inline_keyboard=[[
@@ -112,7 +112,7 @@ async def cb_demo_voice(q: CallbackQuery) -> None:
         "📌 Send a short voice note (5-10 s) and I’ll show you the speaking scorer!"
     )
 
-# ── /plans + purchase flow ───────────────────────────────
+# ── /subscribe + purchase flow ───────────────────────────────
 @dp.message(Command("plans"))
 async def cmd_plans(msg: Message):
     await msg.answer("🚀 Pick a plan:", reply_markup=_plans_keyboard())
@@ -169,6 +169,7 @@ async def main() -> None:
 if __name__ == "__main__":
     asyncio.run(main())
 from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+
 
 
 
