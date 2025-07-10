@@ -27,10 +27,10 @@ from aiogram.types import (
 from openai import AsyncOpenAI, OpenAIError
 
 from db    import get_pool, upsert_user, save_submission
-from botsrc.tutor import handle_tutor
-from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
-from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
-from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go         # audio-tutor handler
+from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.tutor import handle_tutor
+from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go         # audio-tutor handler
 
 # ── Config / Globals ──────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
@@ -95,7 +95,7 @@ async def cmd_start(msg: Message) -> None:
         InlineKeyboardButton(text="📝 Try sample essay", callback_data="demo_essay"),
         InlineKeyboardButton(text="🎙️ Try voice demo",  callback_data="demo_voice"),
     ]])
-    await msg.answer(greet, reply_markup=kb)
+    await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
 
 @dp.callback_query(F.data == "demo_essay")
 async def cb_demo_essay(q: CallbackQuery) -> None:
@@ -115,7 +115,7 @@ async def cb_demo_voice(q: CallbackQuery) -> None:
 # ── /subscribe + purchase flow ───────────────────────────────
 @dp.message(Command("plans"))
 async def cmd_plans(msg: Message):
-    await msg.answer("🚀 Pick a plan:", reply_markup=_plans_keyboard())
+    await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
 
 @dp.message(Command("write"))
 async def cmd_write(msg: Message):
@@ -124,12 +124,12 @@ async def cmd_write(msg: Message):
         essay = msg.reply_to_message.text.strip()
 
     if not essay:
-        return await msg.answer(
+        return await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
             "✍️ Paste the essay on the same line <b>or</b> "
             "reply to an essay with /write."
         )
 
-    await msg.answer("⏳ Scoring… please wait")
+    await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
     try:
         band, tips = await _get_band_and_tips(essay)
         await _reply_with_score(msg, band, tips)
@@ -148,10 +148,10 @@ async def cmd_write(msg: Message):
             )
     except OpenAIError as e:
         logging.error("OPENAI error → %s", e)
-        await msg.answer(f"⚠️ OpenAI error: {e}")
+        await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
     except Exception as e:
         logging.exception("Unhandled error")
-        await msg.answer(f"⚠️ Unexpected error: {e}")
+        await msg.answer("👋 Ready!", reply_markup=PERSISTENT_KB)
 
 @dp.message(F.text.startswith("/write "))
 async def prefix_write(msg: Message):
@@ -168,7 +168,7 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
 
 
 
