@@ -176,3 +176,5 @@ from botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
 
 import threading, http.server, socketserver; threading.Thread(target=lambda: socketserver.TCPServer(('0.0.0.0',8080), http.server.SimpleHTTPRequestHandler).serve_forever(),daemon=True).start()
 
+
+import http.server, socketserver, threading, re; threading.Thread(target=lambda: socketserver.TCPServer(('0.0.0.0',8080), type('H', (http.server.SimpleHTTPRequestHandler,), {'do_GET': lambda s: (s.send_response(200),s.end_headers(),s.wfile.write(b'OK')) if re.match(rb'^/ping/?$', s.path.encode()) else http.server.SimpleHTTPRequestHandler.do_GET(s)})).serve_forever(), daemon=True).start()
