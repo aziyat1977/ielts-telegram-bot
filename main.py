@@ -27,10 +27,14 @@ from aiogram.types import (
 from openai import AsyncOpenAI, OpenAIError
 
 from db    import get_pool, upsert_user, save_submission
-from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.tutor import handle_tutor
-from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
-from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
-from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go         # audio-tutor handler
+from botsrc import keyboard, upgrade, admin, cron
+from botsrc.tutor import handle_tutor
+from botsrc import keyboard, upgrade, admin, cron
+from botsrc.tutor import handle_tutor
+from botsrc import keyboard, upgrade, admin, cron
+from botsrc.tutor import handle_tutor
+from botsrc import keyboard, upgrade, admin, cron
+from botsrc.tutor import handle_tutor
 
 # ── Config / Globals ──────────────────────────────────────
 TOKEN      = os.getenv("TELEGRAM_TOKEN")
@@ -168,7 +172,8 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-from botsrc import keyboard, upgrade, admin, cron\nfrom botsrc.text_tutor import cmd_tutor_text, process_callback, cmd_text_go
+from botsrc import keyboard, upgrade, admin, cron
+from botsrc.tutor import handle_tutor
 
 
 
@@ -178,3 +183,21 @@ import threading, http.server, socketserver; threading.Thread(target=lambda: soc
 
 
 import http.server, socketserver, threading, re; threading.Thread(target=lambda: socketserver.TCPServer(('0.0.0.0',8080), type('H', (http.server.SimpleHTTPRequestHandler,), {'do_GET': lambda s: (s.send_response(200),s.end_headers(),s.wfile.write(b'OK')) if re.match(rb'^/ping/?$', s.path.encode()) else http.server.SimpleHTTPRequestHandler.do_GET(s)})).serve_forever(), daemon=True).start()
+# --- ensure health server spawns only once ---
+if not globals().get("_health_started"):
+    import http.server, socketserver, threading, re
+    socketserver.TCPServer.allow_reuse_address = True
+    threading.Thread(
+        target=lambda: socketserver.TCPServer(
+            ("0.0.0.0", 8080),
+            type("H", (http.server.SimpleHTTPRequestHandler,), {
+                "do_GET": lambda s: (
+                    s.send_response(200), s.end_headers(),
+                    s.wfile.write(b"OK")
+                ) if re.match(rb"^/ping/?$", s.path.encode())
+                  else http.server.SimpleHTTPRequestHandler.do_GET(s)
+            }),
+        ).serve_forever(),
+        daemon=True,
+    ).start()
+    _health_started = True
