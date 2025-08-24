@@ -1,0 +1,28 @@
+app = "ieltsbot-v2-1761"
+primary_region = "fra"
+kill_signal = "SIGTERM"
+kill_timeout = 20
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_start_machines = true
+  auto_stop_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "5s"
+    interval = "5s"
+    method = "GET"
+    timeout = "2s"
+    path = "/health"
+    protocol = "http"
+
+[processes]
+  app = 'bash -lc "exec uvicorn app.mux_main:app --host 0.0.0.0 --port 8080 --proxy-headers --forwarded-allow-ips=* --no-access-log --no-server-header --no-date-header"'
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory = "512mb"
