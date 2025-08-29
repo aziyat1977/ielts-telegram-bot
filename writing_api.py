@@ -31,14 +31,12 @@ def _ai_style_signal(text:str)->Dict[str,Any]:
     sents=_sentences(text); toks=_words(text); lens=[len(_words(s)) for s in sents] or [0]
     mean = sum(lens)/len(lens); sd = (sum((x-mean)**2 for x in lens)/len(lens))**0.5 if lens else 0.0
     cv = (sd/mean) if mean>0 else 0.0; ttr=_ttr(toks); fwr=_function_word_ratio(toks); rep=_ngram_repetition(toks,3)
-    signals=[]; 
+    signals=[];
     if cv < 0.12 and len(sents)>=5: signals.append("sentence_length_uniformity")
     if ttr < 0.26: signals.append("low_type_token_ratio")
     if fwr < 0.35 or fwr > 0.72: signals.append("function_word_profile_outlier")
     if rep > 0.22: signals.append("repetitive_phrasing_3gram")
-    lvl="low"; 
-    if len(signals)>=2: lvl="medium"
-    if len(signals)>=3: lvl="high"
+    lvl="low";  lvl="medium" if len(signals)>=2 else lvl;  lvl="high" if len(signals)>=3 else lvl
     return {"level": lvl, "signals": signals, "disclaimer":"Indicator, not proof; known false positives (esp. non-native writers)."}
 def _min_words(task_type:str)->int: return 250 if task_type=="task2" else 150
 def _prompt(task_type:str, text:str, topic:Optional[str])->str:
@@ -70,11 +68,11 @@ def _oai_score(task_type:str, text:str, topic:Optional[str])->Dict[str,Any]:
     content = resp.choices[0].message.content
     try: import json as _j; return _j.loads(content)
     except Exception:
-        import re as _re, json as _j; m=_re.search(r"\{.*\}\s*$", content, _re.S); 
+        import re as _re, json as _j; m=_re.search(r"\{.*\}\s*$", content, _re.S);
         if not m: raise; return _j.loads(m.group(0))
 def score_text(task_type:str, text:str, topic:Optional[str], ai_style:bool)->Dict[str,Any]:
-    n_words=len(_words(text or "")); 
-    if n_words < _min_words(task_type): raise HTTPException(status_code=400, detail=f"Too short: {n_words} words (min {_min_words(task_type)}).")
+    n_words=len(_words(text or ""));  need=_min_words(task_type)
+    if n_words < need: raise HTTPException(status_code=400, detail=f"Too short: {n_words} words (min {need}).")
     if HAS_OAI:
         try: result=_oai_score(task_type, text, topic)
         except Exception:
@@ -109,7 +107,8 @@ def rewrite_plan(req: RewriteReq, request: Request):
         try:
             from openai import OpenAI, json as _json
             r=OpenAI().chat.completions.create(model="gpt-4o-mini", messages=[{"role":"user","content":f"Create 3 prioritized fixes as JSON key priority_fixes. Text: {text}"}], temperature=0.2)
-            j=_json.loads(r.choices[0].message.content); 
+            j=_json.loads(r.choices[0].message.content)
             if isinstance(j,dict) and 'priority_fixes' in j: plan=j
         except Exception: pass
     return plan
+# === END ===

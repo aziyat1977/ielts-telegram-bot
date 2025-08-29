@@ -19,7 +19,7 @@ def health(): return {"ok":True}
 @app.get("/version")
 def version(): return {"name":"ielts-bot","mode":"merge+writing","v":"ci-prebuilt"}
 def _check_secret(req: Request):
-    tok=req.headers.get("X-Telegram-Bot-Api-Secret-Token"); 
+    tok=req.headers.get("X-Telegram-Bot-Api-Secret-Token");
     if SECRET and tok != SECRET: raise HTTPException(status_code=401, detail="bad secret")
 def _word_count(s:str)->int:
     import re; return len(re.findall(r"[A-Za-z']+", s or ""))
@@ -85,3 +85,4 @@ def _load_real():
     return None
 _real=_load_real()
 if _real is not None: app.mount("/app", _real)
+# === END ===

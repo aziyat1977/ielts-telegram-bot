@@ -1,6 +1,7 @@
 name: Deploy to Fly (prebuilt image)
 on:
-  push: { branches: [ "main" ] }
+  push:
+    branches: [ "main" ]
   workflow_dispatch:
 env:
   FLY_APP: ${{ vars.FLY_APP }}
@@ -15,7 +16,8 @@ jobs:
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Login to Fly registry
         run: flyctl auth docker
-        env: { FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }} }
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Build & push image
         uses: docker/build-push-action@v5
         with:
@@ -31,10 +33,12 @@ jobs:
           args="TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }} TELEGRAM_WEBHOOK_SECRET=${{ secrets.TELEGRAM_WEBHOOK_SECRET }} SCORER_API_KEY=${{ secrets.SCORER_API_KEY }}"
           if [ -n "${{ secrets.OPENAI_API_KEY }}" ]; then args="$args OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}"; fi
           flyctl secrets set $args -a "${{ env.FLY_APP }}"
-        env: { FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }} }
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Deploy prebuilt image
         run: flyctl deploy --image "${{ env.IMAGE }}" -a "${{ env.FLY_APP }}" --strategy immediate --yes
-        env: { FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }} }
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Health check
         run: curl -sSf "https://${{ env.FLY_APP }}.fly.dev/health"
       - name: Set Telegram webhook (secret header)
