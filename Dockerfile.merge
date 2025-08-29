@@ -1,0 +1,9 @@
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
+WORKDIR /app
+COPY . /app
+RUN if [ -f "requirements.txt" ]; then pip install --no-cache-dir -r requirements.txt; \
+    elif [ -f "pyproject.toml" ]; then pip install --no-cache-dir .; \
+    else pip install --no-cache-dir fastapi==0.112.2 uvicorn[standard]==0.30.6 httpx==0.27.2 pydantic==2.8.2 openai==1.43.0; fi
+EXPOSE 8080
+CMD ["python","-m","uvicorn","main_merge:app","--host","0.0.0.0","--port","8080","--workers","1"]

@@ -1,16 +1,7 @@
 app = "ieltsbot-v2-1761"
-primary_region = "fra"
-[build]
-  builtin = "python"
+
 [http_service]
   internal_port = 8080
-  auto_stop_machines = "stop"
   auto_start_machines = true
+  auto_stop_machines  = false
   min_machines_running = 1
-  processes = ["app"]
-[[vm]]
-  memory = "512mb"
-  cpu_kind = "shared"
-  cpus = 1
-[processes]
-  app = 'bash -lc "exec uvicorn app.mux_main:app --host 0.0.0.0 --port 8080 --proxy-headers --forwarded-allow-ips=*"'
