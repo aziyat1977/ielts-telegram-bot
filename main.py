@@ -1,3 +1,4 @@
+from app.ux_router import ROUTER
 """
 IELTS Bot — Essay & Speaking Scorer v2.8.2
 ──────────────────────────────────────────
@@ -46,6 +47,7 @@ bot    = Bot(TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 
 # Dispatcher must exist BEFORE decorators are evaluated 👇
 dp = Dispatcher()
+dp.include_router(ROUTER)
 dp.message.middleware(QuotaMiddleware())
 
 
@@ -94,8 +96,8 @@ async def cmd_start(msg: Message) -> None:
         "Commands: <code>/me</code> · <code>/top</code> · <code>/plans</code>"
     )
     kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton("📝 Try sample essay", callback_data="demo_essay"),
-        InlineKeyboardButton("🎙️ Try voice demo",  callback_data="demo_voice"),
+        InlineKeyboardButton(text="📝 Try sample essay", callback_data="demo_essay"),
+        InlineKeyboardButton(text="🎙️ Try voice demo",  callback_data="demo_voice"),
     ]])
     await msg.answer(greet, reply_markup=kb)
 
@@ -158,3 +160,9 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+
+
+
+

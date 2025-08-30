@@ -1,0 +1,45 @@
+{
+  "//": "UX Contract v1.0 — stable wordings & buttons",
+  "version": "1.0.0",
+  "home": {
+    "title": "👋 IELTS Writing Assistant",
+    "body": "I can estimate band scores and suggest improvements based on IELTS Writing criteria.",
+    "buttons": [
+      {"id":"score","text":"📝 Score my Writing","cb":"score"},
+      {"id":"demo","text":"🎯 Try sample essay","cb":"demo"},
+      {"id":"history","text":"📊 History","cb":"history"},
+      {"id":"settings","text":"⚙️ Settings","cb":"settings"}
+    ]
+  },
+  "task": {
+    "prompt": "Choose your task type:",
+    "buttons": [
+      {"id":"t1","text":"Task 1 (≥150 words)","cb":"t:1"},
+      {"id":"t2","text":"Task 2 (≥250 words)","cb":"t:2"}
+    ],
+    "min_words": {"t1":150,"t2":250}
+  },
+  "paste": {
+    "prompt_t1": "Paste your Task 1 response (≥150 words).",
+    "prompt_t2": "Paste your Task 2 essay (≥250 words).",
+    "too_short": "This looks short: {words}/{min}. Please add ~{need} more words.",
+    "confirm": "Looks good ({words} words). Score it?",
+    "buttons": [
+      {"id":"go","text":"✅ Score it","cb":"score_go"},
+      {"id":"back","text":"↩️ Back","cb":"home"}
+    ]
+  },
+  "result": {
+    "title": "📈 Estimated band",
+    "template": "Overall: <b>{overall}</b>\nTR: <b>{TR}</b>  CC: <b>{CC}</b>  LR: <b>{LR}</b>  GRA: <b>{GRA}</b>",
+    "tips_header": "🔧 Next steps",
+    "buttons": [
+      {"id":"improve","text":"🔁 Improve advice","cb":"tips_again"},
+      {"id":"compare","text":"📘 Compare to a band 9 sample","cb":"compare9"},
+      {"id":"home","text":"🏠 Home","cb":"home"}
+    ]
+  },
+  "demo": { "title": "🧪 Sample essay", "body": "I’ll score an example essay so you can see what to expect." },
+  "history": { "empty": "No previous scores yet." },
+  "settings": { "body": "Scoring source priority:\n1) /score service (SCORER_API_KEY)\n2) OpenAI (OPENAI_API_KEY)\n3) Built-in fallback (approx.)" }
+}
