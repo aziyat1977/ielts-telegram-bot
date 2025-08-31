@@ -32,3 +32,13 @@ COPY . .
 ENV PYTHONUNBUFFERED=1
 
 CMD ["python", "main.py"]
+
+# Auto-added: serve minimal ASGI so Fly proxy reaches the app
+CMD ["uvicorn", "__guard_only:app", "--host", "0.0.0.0", "--port", ""]
+
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+

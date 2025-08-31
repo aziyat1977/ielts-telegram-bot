@@ -1,41 +1,38 @@
-# fly.toml — IELTS Bot (long-polling + health check)
-
-app            = "ieltsbot"
+app = "ieltsbot-v2-1761"
 primary_region = "fra"
 
-[build]
-  dockerfile = "Dockerfile"
+[[vm]]
+  cpu_kind = "shared"
+  cpus     = 1
+  memory   = "512mb"
 
-# ── Runtime process ──────────────────────────────────────────
 [processes]
-  app = "python main.py"
-
-# ── Service & health-check on :8080 ──────────────────────────
+  http = "uvicorn __guard_http:app --host 0.0.0.0 --port ${PORT:-8080}"
+  bot  = "python main.py"
 [[services]]
-  internal_port = 8080          # matches _start_health_server()
-  protocol      = "tcp"
-  processes     = ["app"]
-
-  # ── Public endpoints ───────────────────────────────────────
-  [[services.ports]]
-    handlers = ["http"]         # :80  → HTTP
-    port     = 80
+  processes = ["http"]
+  internal_port = 8080
+  protocol = "tcp"
 
   [[services.ports]]
-    handlers = ["tls", "http"]  # :443 → HTTPS (auto-TLS)
-    port     = 443
+    handlers = ["http"]
+    port = 80
 
-  # ── Health check (same port) ───────────────────────────────
+  [[services.ports]]
+    handlers = ["tls","http"]
+    port = 443
+
   [[services.http_checks]]
-    path         = "/ping"
+    path         = "/health"
     method       = "get"
     protocol     = "http"
     grace_period = "10s"
     interval     = "15s"
     timeout      = "2s"
 
-# ── VM sizing ────────────────────────────────────────────────
-[[vm]]
-  cpus     = 1
-  memory   = "512mb"
-  cpu_kind = "shared"
+[http_service.checks]
+  grace_period = "10s"
+  interval = "15s"
+  method = "GET"
+  timeout = "5s"
+  path = "/health"

@@ -32,3 +32,12 @@ if __name__ == "__main__":
 
 
 
+# === Auto-added: Malformed JSON => 400 guard for /telegram + robots.txt ===
+try:
+    from _webhook_guard import mount_guard
+    # Ensure variable 'a' exists and is ASGI-app-like
+    a = mount_guard(a, path="/telegram")
+except Exception as _e:
+    # Best-effort; never break startup
+    pass
+# === End auto-added ===
