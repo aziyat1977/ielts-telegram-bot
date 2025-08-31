@@ -38,3 +38,12 @@ primary_region = "fra"
   path = "/health"
 
 [[services.http_checks]]
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval     = "30s"
+  timeout      = "5s"
+  method       = "GET"
+  path         = "/health"
+  [http_service.checks.headers]
+    X-Forwarded-Proto = "https"
