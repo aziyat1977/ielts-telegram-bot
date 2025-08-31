@@ -36,3 +36,5 @@ primary_region = "fra"
   method = "GET"
   timeout = "5s"
   path = "/health"
+
+[[services.http_checks]]
