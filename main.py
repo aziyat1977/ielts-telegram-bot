@@ -1,3 +1,12 @@
+from flask import Flask, jsonify
+try:
+    
+except NameError:
+     = Flask(__name__)
+@.route("/health")
+def _health(): return jsonify(status="ok"), 200
+@.route("/version")
+def _version(): return jsonify(version="0.1.0", env="sprint0"), 200
 from app.ux_router import ROUTER
 """
 IELTS Bot — Essay & Speaking Scorer v2.8.2
@@ -160,6 +169,7 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
