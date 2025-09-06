@@ -1,14 +1,11 @@
 {
-  "name": "ielts-bot-sprint2",
-  "version": "0.2.0",
+  "name": "ielts-bot-sprint4",
+  "version": "0.4.0",
   "type": "module",
   "engines": { "node": ">=18" },
   "scripts": {
-    "t2:score": "node scripts/t2_engine.mjs",
-    "t1:overview": "node scripts/t1_overview_check.mjs",
-    "t1:features": "node scripts/t1_features_check.mjs",
-    "eval:qwk": "node scripts/eval_qwk.mjs",
-    "test": "node scripts/run_all.mjs"
+    "annotator:start": "node annotator/server.mjs",
+    "hitl:seed": "node scripts/seed_label.mjs"
   },
   "dependencies": {}
 }

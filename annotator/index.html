@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sprint 4 — HITL Annotator</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<header><h1>Sprint 4 — HITL Annotator</h1><div id="status"></div></header>
+<main>
+  <aside>
+    <button id="prev">◀ Prev</button>
+    <button id="next">Next ▶</button>
+    <span id="pos"></span>
+    <button id="save">Save Label</button>
+  </aside>
+  <section id="sample"></section>
+  <section id="form">
+    <div class="row">
+      <label>TR</label><input type="number" id="TR" min="5" max="9" step="1"/>
+      <label>CC</label><input type="number" id="CC" min="5" max="9" step="1"/>
+      <label>LR</label><input type="number" id="LR" min="5" max="9" step="1"/>
+      <label>GR</label><input type="number" id="GR" min="5" max="9" step="1"/>
+      <label>Overall</label><input type="number" id="OV" min="5" max="9" step="1"/>
+    </div>
+    <textarea id="notes" rows="4" placeholder="Notes (optional)"></textarea>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

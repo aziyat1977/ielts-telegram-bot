@@ -1,0 +1,29 @@
+name: sprint4-hitl
+on:
+  push:
+    branches: [ "main", "sprint4/**" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  hitl-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: Seed one label (no UI in CI)
+        run: node scripts/seed_label.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Run aggregation + metrics
+        run: python notebooks/hitl_aggregate.py | tee sprint4_metrics_log.json
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprint4-hitl-artifacts
+          path: |
+            annotations/sprint4_labels.json
+            notebooks/outputs/sprint4_hitl_metrics.json
+            sprint4_metrics_log.json
