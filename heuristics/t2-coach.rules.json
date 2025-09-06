@@ -4,25 +4,25 @@
   "criteria": {
     "TaskResponse": {
       "checks": [
-        { "id": "tr.parts",   "desc": "Answers all parts", "weight": 3 },
-        { "id": "tr.position","desc": "Clear position throughout", "weight": 3 },
-        { "id": "tr.support", "desc": "Each body has developed support", "weight": 2 }
+        { "id": "tr.parts",    "desc": "Answers all parts",                       "weight": 3 },
+        { "id": "tr.position", "desc": "Clear position throughout",               "weight": 3 },
+        { "id": "tr.support",  "desc": "Each body has developed support",         "weight": 2 }
       ]
     },
     "CoherenceCohesion": {
       "checks": [
-        { "id": "cc.paragraphing","desc": "Logical paragraphing with topic sentences", "weight": 2 },
-        { "id": "cc.invisible",   "desc": "Cohesion attracts no attention", "weight": 2 }
+        { "id": "cc.paragraph","desc": "Logical paragraphing with topic sentences","weight": 2 },
+        { "id": "cc.invisible","desc": "Cohesion attracts no attention",          "weight": 2 }
       ]
     },
     "LexicalResource": {
       "checks": [
-        { "id": "lr.precision","desc": "Precise lexis & collocation, minimal repetition", "weight": 2 }
+        { "id": "lr.precision","desc": "Precise lexis & collocation; low repeat", "weight": 2 }
       ]
     },
     "Grammar": {
       "checks": [
-        { "id": "gr.rangeacc","desc": "Wide range, high accuracy; slips only", "weight": 2 }
+        { "id": "gr.rangeacc","desc": "Wide range; high accuracy; rare slips",    "weight": 2 }
       ]
     }
   },
