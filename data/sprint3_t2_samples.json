@@ -1,0 +1,12 @@
+[
+  { "id": 1, "prompt": "Discuss both views and give your opinion.", "thesis": "I believe technology benefits outweigh risks.", "essay": "Body 1 explains drawbacks... For example, ... Therefore, ...  \n\n Body 2 covers benefits... For instance, ... As a result, ...", "gold": 7 },
+  { "id": 2, "prompt": "Do the advantages outweigh the disadvantages?", "thesis": "I agree advantages dominate.", "essay": "Intro position. \n\n Body 1 advantage with example. \n\n Body 2 disadvantage but mitigated. For example ... However ...", "gold": 7 },
+  { "id": 3, "prompt": "What are the causes of X and how can this be solved?", "thesis": "It is caused by A/B and can be solved by C/D.", "essay": "Cause A explained because ... \n\n Cause B explained therefore ... \n\n Solution C described ... \n\n Solution D described for instance ...", "gold": 8 },
+  { "id": 4, "prompt": "To what extent do you agree or disagree?", "thesis": "I partially agree.", "essay": "Short essay lacking examples.", "gold": 6 },
+  { "id": 5, "prompt": "Discuss both views and give your opinion.", "thesis": "I strongly agree with view two.", "essay": "Well developed with multiple examples: for example, for instance, because, therefore, as a result. Paragraphing clear.", "gold": 9 },
+  { "id": 6, "prompt": "Do the advantages outweigh the disadvantages?", "thesis": "I believe advantages outweigh disadvantages.", "essay": "Two bodies with examples; cohesive and accurate structures although minor slips.", "gold": 8 },
+  { "id": 7, "prompt": "Causes and solutions", "thesis": "Causes are X/Y; solutions are Z/W.", "essay": "Adequate development; a few linkers. For instance ... Because ...", "gold": 7 },
+  { "id": 8, "prompt": "Agree or disagree", "thesis": "I agree.", "essay": "Very short; limited development.", "gold": 6 },
+  { "id": 9, "prompt": "Both views + opinion", "thesis": "I disagree overall.", "essay": "Balanced paragraphs; accurate comparisons; several examples.", "gold": 8 },
+  { "id": 10, "prompt": "Advantages / disadvantages", "thesis": "Disadvantages outweigh advantages.", "essay": "Clear stance; some examples; good cohesion.", "gold": 7 }
+]
