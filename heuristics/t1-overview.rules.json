@@ -1,0 +1,9 @@
+{
+  "name": "t1-overview-baseline",
+  "version": 1,
+  "checks": [
+    { "id": "ov.present", "desc": "Overview present (global, no numbers)", "weight": 3 },
+    { "id": "ov.patterns","desc": "Main trends/extremes/stages captured", "weight": 2 }
+  ],
+  "scoring": { "bands": [5,6,7,8,9] }
+}

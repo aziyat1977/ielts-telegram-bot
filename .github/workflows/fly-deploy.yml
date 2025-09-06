@@ -1,0 +1,11 @@
+name: Fly Deploy
+on:
+  push:
+    branches: [ sprint0, main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only --app ieltsbot-v2-1761 --strategy immediate

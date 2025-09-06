@@ -1,0 +1,30 @@
+{
+  "name": "t2-coach-baseline",
+  "version": 1,
+  "criteria": {
+    "TaskResponse": {
+      "checks": [
+        { "id": "tr.parts",   "desc": "Answers all parts", "weight": 3 },
+        { "id": "tr.position","desc": "Clear position throughout", "weight": 3 },
+        { "id": "tr.support", "desc": "Each body has developed support", "weight": 2 }
+      ]
+    },
+    "CoherenceCohesion": {
+      "checks": [
+        { "id": "cc.paragraphing","desc": "Logical paragraphing with topic sentences", "weight": 2 },
+        { "id": "cc.invisible",   "desc": "Cohesion attracts no attention", "weight": 2 }
+      ]
+    },
+    "LexicalResource": {
+      "checks": [
+        { "id": "lr.precision","desc": "Precise lexis & collocation, minimal repetition", "weight": 2 }
+      ]
+    },
+    "Grammar": {
+      "checks": [
+        { "id": "gr.rangeacc","desc": "Wide range, high accuracy; slips only", "weight": 2 }
+      ]
+    }
+  },
+  "scoring": { "cap_rules": [], "bands": [5,6,7,8,9] }
+}
