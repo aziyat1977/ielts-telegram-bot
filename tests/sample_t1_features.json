@@ -1,0 +1,13 @@
+{
+  "features": [
+    "A highest",
+    "B lowest",
+    "C stable"
+  ],
+  "comparisons": [
+    "A > B",
+    "C ~ B"
+  ],
+  "units": true,
+  "time": true
+}
