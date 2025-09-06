@@ -1,0 +1,36 @@
+name: sprint5-rag
+on:
+  push:
+    branches: [ "main", "sprint5/**" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  rag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Build vector store
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python rag/build_store.py | tee build_log.json
+      - name: Sample query
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python rag/query.py "How to ensure 'invisible cohesion' in Task 2?" | tee query_log.json
+      - name: Orchestrator
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/run_rag_build_and_query.py | tee sprint5_orchestrator_log.json
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprint5-rag-artifacts
+          path: |
+            rag/store/index.json
+            build_log.json
+            query_log.json
+            notebooks/outputs/sprint5_build.json
+            notebooks/outputs/sprint5_query.json

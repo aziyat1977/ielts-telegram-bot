@@ -1,0 +1,29 @@
+{
+  "query": "How to write a Band 7+ Task 1 overview without numbers?",
+  "rationale": "This guidance is grounded in public IELTS descriptors: answer all parts; maintain a clear position; provide an overview in Task 1; select and compare key features with correct units/time; prefer 'invisible cohesion'.",
+  "evidence": [
+    {
+      "score": 0.2942,
+      "id": "descriptors.md::5",
+      "title": "IELTS Writing Task 1 \u2014 Overview Requirement",
+      "text": "- Provide a 1\u20132 sentence global overview without numbers.\n- Capture main trends/extremes/stages, not details."
+    },
+    {
+      "score": 0.1826,
+      "id": "descriptors.md::8",
+      "title": "Time & Length Norms",
+      "text": "- Task 1: ~20 minutes, \u2265150 words.\n- Task 2: ~40 minutes, \u2265250 words; no bullets/notes."
+    },
+    {
+      "score": 0.0981,
+      "id": "descriptors.md::3",
+      "title": "IELTS Writing Task 2 \u2014 Lexical Resource (LR)",
+      "text": "- Use precise, appropriate lexis and collocations.\n- Paraphrase accurately without distorting meaning; avoid repetition."
+    }
+  ],
+  "summary_bullets": [
+    "- [IELTS Writing Task 1 \u2014 Overview Requirement] - Provide a 1\u20132 sentence global overview without numbers.",
+    "- [Time & Length Norms] - Task 1: ~20 minutes, \u2265150 words.",
+    "- [IELTS Writing Task 2 \u2014 Lexical Resource (LR)] - Use precise, appropriate lexis and collocations."
+  ]
+}
