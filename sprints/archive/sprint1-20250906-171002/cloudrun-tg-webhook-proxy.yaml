@@ -1,0 +1,88 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    run.googleapis.com/build-base-image: gcr.io/buildpacks/google-22/run
+    run.googleapis.com/build-enable-automatic-updates: 'false'
+    run.googleapis.com/build-id: a12355a1-1cba-4da6-8a9d-c5932ac0305b
+    run.googleapis.com/build-image-uri: us-central1-docker.pkg.dev/ielts-rater-bot/cloud-run-source-deploy/tg-webhook-proxy
+    run.googleapis.com/build-name: projects/819523522632/locations/us-central1/builds/a12355a1-1cba-4da6-8a9d-c5932ac0305b
+    run.googleapis.com/build-source-location: gs://run-sources-ielts-rater-bot-us-central1/services/tg-webhook-proxy/1757145884.507806-cea424be19184624a76d531c6dc114cb.zip#1757145884912162
+    run.googleapis.com/client-name: gcloud
+    run.googleapis.com/client-version: 536.0.1
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    run.googleapis.com/operation-id: 169ae18c-9f94-4ac0-8e12-b46f2616518f
+    run.googleapis.com/urls: '["https://tg-webhook-proxy-819523522632.us-central1.run.app","https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app"]'
+    serving.knative.dev/creator: rakhimovrustam757@gmail.com
+    serving.knative.dev/lastModifier: rakhimovrustam757@gmail.com
+  creationTimestamp: '2025-09-05T18:40:56.754071Z'
+  generation: 12
+  labels:
+    cloud.googleapis.com/location: us-central1
+  name: tg-webhook-proxy
+  namespace: '819523522632'
+  resourceVersion: AAY+HW3i29Y
+  selfLink: /apis/serving.knative.dev/v1/namespaces/819523522632/services/tg-webhook-proxy
+  uid: 8dee6d8e-3d33-4320-b36a-19d24374f813
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '3'
+        run.googleapis.com/client-name: gcloud
+        run.googleapis.com/client-version: 536.0.1
+        run.googleapis.com/startup-cpu-boost: 'true'
+      labels:
+        client.knative.dev/nonce: mgkvujmszd
+        run.googleapis.com/startupProbeType: Default
+    spec:
+      containerConcurrency: 80
+      containers:
+      - env:
+        - name: WEBHOOK_PATH
+          value: /tg/webhook
+        - name: WEBHOOK_SECRET
+          value: 8-_d76X_WcoQ0a-FnZnjo4p3g5CUiasF
+        - name: BOT_TOKEN
+          value: 7871977412:AAHFilYo0X6GB1BlJDKR5laLDBqhnX9gg-c
+        image: us-central1-docker.pkg.dev/ielts-rater-bot/cloud-run-source-deploy/tg-webhook-proxy@sha256:975afa3e205cad8be420dffdbf4380f152408468e47f3b9f841b49dae32c9ab9
+        ports:
+        - containerPort: 8080
+          name: http1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        startupProbe:
+          failureThreshold: 1
+          periodSeconds: 240
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 240
+      serviceAccountName: 819523522632-compute@developer.gserviceaccount.com
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100
+status:
+  address:
+    url: https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app
+  conditions:
+  - lastTransitionTime: '2025-09-06T08:06:18.821590Z'
+    status: 'True'
+    type: Ready
+  - lastTransitionTime: '2025-09-06T08:06:17.565375Z'
+    status: 'True'
+    type: ConfigurationsReady
+  - lastTransitionTime: '2025-09-06T08:06:18.781120Z'
+    status: 'True'
+    type: RoutesReady
+  latestCreatedRevisionName: tg-webhook-proxy-00012-vkb
+  latestReadyRevisionName: tg-webhook-proxy-00012-vkb
+  observedGeneration: 12
+  traffic:
+  - latestRevision: true
+    percent: 100
+    revisionName: tg-webhook-proxy-00012-vkb
+  url: https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app
