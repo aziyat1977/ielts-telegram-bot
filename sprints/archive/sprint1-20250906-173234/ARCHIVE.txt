@@ -1,0 +1,6 @@
+service: tg-webhook-proxy
+project: ielts-rater-bot
+region:  us-central1
+url:     https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app
+latestReadyRevision: tg-webhook-proxy-00012-vkb
+timestamp_utc: 20250906-173234
