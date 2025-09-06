@@ -1,0 +1,1693 @@
+[
+  {
+    "httpRequest": {
+      "latency": "0.326893708s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.75.2",
+      "status": 200
+    },
+    "insertId": "68bc61d5000bc36d557f3b34",
+    "labels": {
+      "instanceId": "0069c7a9886f8642f465cf3c58540bd57579c317246f5f160878105a357e2014640c3e8f8075871013ebbe3f1efee1a813154df8856886eb6a0f671789ea4c451d2defa174cd9880c3cb4038949655"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T16:31:17.780789083Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00012-vkb",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "1ba4057a31f7602a",
+    "timestamp": "2025-09-06T16:31:17.442516Z",
+    "trace": "projects/ielts-rater-bot/traces/b36e35295fdcb82ef49ad824bf5ac89e"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.307629748s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.75.2",
+      "status": 200
+    },
+    "insertId": "68bc61d3000aee5a0c457a72",
+    "labels": {
+      "instanceId": "0069c7a9886f8642f465cf3c58540bd57579c317246f5f160878105a357e2014640c3e8f8075871013ebbe3f1efee1a813154df8856886eb6a0f671789ea4c451d2defa174cd9880c3cb4038949655"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T16:31:15.785877701Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00012-vkb",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "93b91c080b5b1d98",
+    "timestamp": "2025-09-06T16:31:15.406913Z",
+    "trace": "projects/ielts-rater-bot/traces/3be49b07bba5e7687be1cf9200beb849"
+  },
+  {
+    "httpRequest": {
+      "latency": "1.435947323s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.75.2",
+      "status": 200
+    },
+    "insertId": "68bc61d10001c13f41839bed",
+    "labels": {
+      "instanceId": "0069c7a9886f8642f465cf3c58540bd57579c317246f5f160878105a357e2014640c3e8f8075871013ebbe3f1efee1a813154df8856886eb6a0f671789ea4c451d2defa174cd9880c3cb4038949655"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T16:31:13.120200783Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00012-vkb",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "be81a74652a42128",
+    "timestamp": "2025-09-06T16:31:11.512507Z",
+    "trace": "projects/ielts-rater-bot/traces/eb92a484582261d07be1cf9200beb37d",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003518639s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "84.54.92.164",
+      "requestMethod": "POST",
+      "requestSize": "649",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.79.2",
+      "status": 200,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26100; en-US) PowerShell/7.5.2"
+    },
+    "insertId": "68bbeb8e000beac9f0c153d5",
+    "labels": {
+      "instanceId": "0069c7a988b441d58091b99b23718868a26b1cf7491cd2f53d27833f6ad8e8a59c6fb58911ff02312bfb552d31325e37cdd4671c270bf613c2b85dd30c14597b6616c4e9741c0851e2be9ff513"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T08:06:39.001564329Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00012-vkb",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "6d9ee84594372c85",
+    "timestamp": "2025-09-06T08:06:38.775129Z",
+    "trace": "projects/ielts-rater-bot/traces/d4b58d9b09430c743aca73b0c67c5a79"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.018018060s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "84.54.92.164",
+      "requestMethod": "POST",
+      "requestSize": "396",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.79.2",
+      "status": 401,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26100; en-US) PowerShell/7.5.2"
+    },
+    "insertId": "68bbeb89000d8d1d96273537",
+    "labels": {
+      "instanceId": "0069c7a988b441d58091b99b23718868a26b1cf7491cd2f53d27833f6ad8e8a59c6fb58911ff02312bfb552d31325e37cdd4671c270bf613c2b85dd30c14597b6616c4e9741c0851e2be9ff513"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T08:06:34.004563238Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00012-vkb",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "8343270bcf9dd7e2",
+    "timestamp": "2025-09-06T08:06:33.868457Z",
+    "trace": "projects/ielts-rater-bot/traces/57b63a47d82e1a1a8f6837884210d60b"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.424227542s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbea38000cda92493627ab",
+    "labels": {
+      "instanceId": "0069c7a988b02d9bd0afa552c74b169c68101520081f807924e7fb4482a28c934c6635c0c86ef55b9995202ca79f5e20582b9b21fedcfe8060e6a8897042674a5cd5ceeceb311d78c0ea7881c7b2"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T08:00:57.008815706Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00011-bbs",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "5f331e5d3e219817",
+    "timestamp": "2025-09-06T08:00:56.415866Z",
+    "trace": "projects/ielts-rater-bot/traces/77af72f08c9e420df2a7bb4530e177e5"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.587200187s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbea350005333cbf524a21",
+    "labels": {
+      "instanceId": "0069c7a988b02d9bd0afa552c74b169c68101520081f807924e7fb4482a28c934c6635c0c86ef55b9995202ca79f5e20582b9b21fedcfe8060e6a8897042674a5cd5ceeceb311d78c0ea7881c7b2"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T08:00:53.348092007Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00011-bbs",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "9bc76d7ddf2aa6f6",
+    "timestamp": "2025-09-06T08:00:52.743478Z",
+    "trace": "projects/ielts-rater-bot/traces/083b94b42847c5ab9828badec6ae5b0f",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.307665190s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbe7fb0003f15794c7f5de",
+    "labels": {
+      "instanceId": "0069c7a988b02d9bd0afa552c74b169c68101520081f807924e7fb4482a28c934c6635c0c86ef55b9995202ca79f5e20582b9b21fedcfe8060e6a8897042674a5cd5ceeceb311d78c0ea7881c7b2"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:51:23.413474913Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00011-bbs",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "0849f9032c599619",
+    "timestamp": "2025-09-06T07:51:22.948921Z",
+    "trace": "projects/ielts-rater-bot/traces/31efa4fc4cfa9c30587f153ebf9cda22"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.315022285s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "764",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbe7f8000297e4dc1b421a",
+    "labels": {
+      "instanceId": "0069c7a988b02d9bd0afa552c74b169c68101520081f807924e7fb4482a28c934c6635c0c86ef55b9995202ca79f5e20582b9b21fedcfe8060e6a8897042674a5cd5ceeceb311d78c0ea7881c7b2"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:51:20.414711950Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00011-bbs",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "90dc752d98b2554f",
+    "timestamp": "2025-09-06T07:51:19.853096Z",
+    "trace": "projects/ielts-rater-bot/traces/bddd6b96949594cb1709a4942ff29733"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.577723707s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbe7f4000b5ab20ddecfd2",
+    "labels": {
+      "instanceId": "0069c7a988b02d9bd0afa552c74b169c68101520081f807924e7fb4482a28c934c6635c0c86ef55b9995202ca79f5e20582b9b21fedcfe8060e6a8897042674a5cd5ceeceb311d78c0ea7881c7b2"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:51:16.748711248Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00011-bbs",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "2c766474352e436b",
+    "timestamp": "2025-09-06T07:51:16.164964Z",
+    "trace": "projects/ielts-rater-bot/traces/b0d228ec67be4e601709a4942ff293de",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.062071336s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "84.54.92.164",
+      "requestMethod": "POST",
+      "requestSize": "649",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.72.2",
+      "status": 200,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26100; en-US) PowerShell/7.5.2"
+    },
+    "insertId": "68bbe7e6000626ded9dccf59",
+    "labels": {
+      "instanceId": "0069c7a988b02d9bd0afa552c74b169c68101520081f807924e7fb4482a28c934c6635c0c86ef55b9995202ca79f5e20582b9b21fedcfe8060e6a8897042674a5cd5ceeceb311d78c0ea7881c7b2"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:51:02.406156147Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00011-bbs",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "2f45afa75e0717c2",
+    "timestamp": "2025-09-06T07:51:02.332903Z",
+    "trace": "projects/ielts-rater-bot/traces/39e59bfa3a06a4ecd4b42db17e79ed88",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.318882911s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbe14d00036bedb0267bcc",
+    "labels": {
+      "instanceId": "0069c7a988a112132ddfd18823a5d1cba038adb1fb9585a611fc54594596e0f41425bc06621fb1b3c329edcd273bf621f149eff4017eb56a71826c860876c05719abcb68190060c5f34c18b7ea6c"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:22:53.381460897Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "3d26f28ea7296767",
+    "timestamp": "2025-09-06T07:22:52.903225Z",
+    "trace": "projects/ielts-rater-bot/traces/2aa67783beac6c4c5c8af0bbfcf15319"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.548497763s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbe14b0000ae96cfc2fdce",
+    "labels": {
+      "instanceId": "0069c7a988a112132ddfd18823a5d1cba038adb1fb9585a611fc54594596e0f41425bc06621fb1b3c329edcd273bf621f149eff4017eb56a71826c860876c05719abcb68190060c5f34c18b7ea6c"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:22:51.050810305Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "653438db3c1ec781",
+    "timestamp": "2025-09-06T07:22:50.488842Z",
+    "trace": "projects/ielts-rater-bot/traces/dac4fdc9f978ae7f5c8af0bbfcf15b3b",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.608746655s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbe0e100053f6da5e8b1c9",
+    "labels": {
+      "instanceId": "0069c7a988a112132ddfd18823a5d1cba038adb1fb9585a611fc54594596e0f41425bc06621fb1b3c329edcd273bf621f149eff4017eb56a71826c860876c05719abcb68190060c5f34c18b7ea6c"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:21:05.347287909Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "12f781c215497425",
+    "timestamp": "2025-09-06T07:21:04.728667Z",
+    "trace": "projects/ielts-rater-bot/traces/6ebc4e3f30dfd6763f53038bbcec646d",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.314132588s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbdfea0000b0a9394e0e20",
+    "labels": {
+      "instanceId": "0069c7a988a112132ddfd18823a5d1cba038adb1fb9585a611fc54594596e0f41425bc06621fb1b3c329edcd273bf621f149eff4017eb56a71826c860876c05719abcb68190060c5f34c18b7ea6c"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:16:58.159539927Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "34c46bf657db9755",
+    "timestamp": "2025-09-06T07:16:57.729170Z",
+    "trace": "projects/ielts-rater-bot/traces/7e08da93af1a62797c8a1573f495a37c"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.303251629s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbdfe9000918ae9f38abd0",
+    "labels": {
+      "instanceId": "0069c7a988a112132ddfd18823a5d1cba038adb1fb9585a611fc54594596e0f41425bc06621fb1b3c329edcd273bf621f149eff4017eb56a71826c860876c05719abcb68190060c5f34c18b7ea6c"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:16:57.825402371Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "bbd4215049b61422",
+    "timestamp": "2025-09-06T07:16:57.291231Z",
+    "trace": "projects/ielts-rater-bot/traces/8166b4d2bf66da527c8a1573f495a034"
+  },
+  {
+    "httpRequest": {
+      "latency": "1.143051906s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "763",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.76.2",
+      "status": 200
+    },
+    "insertId": "68bbdfe900025e6e122272b3",
+    "labels": {
+      "instanceId": "0069c7a988a112132ddfd18823a5d1cba038adb1fb9585a611fc54594596e0f41425bc06621fb1b3c329edcd273bf621f149eff4017eb56a71826c860876c05719abcb68190060c5f34c18b7ea6c"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T07:16:57.159878635Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "f3bfcd7e36c6d34d",
+    "timestamp": "2025-09-06T07:16:55.652715Z",
+    "trace": "projects/ielts-rater-bot/traces/6cd6b32c402710d77c8a1573f495ad5a",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.004155950s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "84.54.92.164",
+      "requestMethod": "POST",
+      "requestSize": "648",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.73.2",
+      "status": 200,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26100; en-US) PowerShell/7.5.2"
+    },
+    "insertId": "68bbdab3000bd3635c958b11",
+    "labels": {
+      "instanceId": "0069c7a9882b8f603383c3a98c7783200bfba755a9c0130a4db47630ae29e938e8a9df47b58c923b118fe9a221ced7568ce62359984884780d6778b595698803244f68f350945502ad59cc2821d9ab"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:54:43.782572251Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "cfe7d494d7579e0c",
+    "timestamp": "2025-09-06T06:54:43.766960Z",
+    "trace": "projects/ielts-rater-bot/traces/09804b50a9b56c516ed21477df951c90",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.004031377s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbdaa4000440f00d6a183f",
+    "labels": {
+      "instanceId": "0069c7a9882b8f603383c3a98c7783200bfba755a9c0130a4db47630ae29e938e8a9df47b58c923b118fe9a221ced7568ce62359984884780d6778b595698803244f68f350945502ad59cc2821d9ab"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:54:28.284566493Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "6dd9d6fabc2aaa02",
+    "timestamp": "2025-09-06T06:54:28.266192Z",
+    "trace": "projects/ielts-rater-bot/traces/7971353b0378d4ce28d6353ea20f5481",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.004697523s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbda4500026f0cca771f1c",
+    "labels": {
+      "instanceId": "0069c7a9882b8f603383c3a98c7783200bfba755a9c0130a4db47630ae29e938e8a9df47b58c923b118fe9a221ced7568ce62359984884780d6778b595698803244f68f350945502ad59cc2821d9ab"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:52:53.165612227Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "d482c391344eda94",
+    "timestamp": "2025-09-06T06:52:53.147355Z",
+    "trace": "projects/ielts-rater-bot/traces/8b600d576c3f4a8e6b688a03904ed4e1",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.004424708s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "763",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd9d50000813394521bf7",
+    "labels": {
+      "instanceId": "0069c7a9882b8f603383c3a98c7783200bfba755a9c0130a4db47630ae29e938e8a9df47b58c923b118fe9a221ced7568ce62359984884780d6778b595698803244f68f350945502ad59cc2821d9ab"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:51:01.037912528Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "2104d61724613f1b",
+    "timestamp": "2025-09-06T06:51:01.021785Z",
+    "trace": "projects/ielts-rater-bot/traces/e879dc636e083e9742a0b8f9ce77b230",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.004373173s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "764",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd95f000df22d6226fc41",
+    "labels": {
+      "instanceId": "0069c7a9882b8f603383c3a98c7783200bfba755a9c0130a4db47630ae29e938e8a9df47b58c923b118fe9a221ced7568ce62359984884780d6778b595698803244f68f350945502ad59cc2821d9ab"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:49:03.918820058Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "9ec4b48be5a380fb",
+    "timestamp": "2025-09-06T06:49:03.902170Z",
+    "trace": "projects/ielts-rater-bot/traces/99cd35aa2993258e25faeffdbe45bdf1",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.004276619s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "764",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd8fd000c282d09db76d7",
+    "labels": {
+      "instanceId": "0069c7a9882b8f603383c3a98c7783200bfba755a9c0130a4db47630ae29e938e8a9df47b58c923b118fe9a221ced7568ce62359984884780d6778b595698803244f68f350945502ad59cc2821d9ab"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:47:25.801358566Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "7960594842986903",
+    "timestamp": "2025-09-06T06:47:25.785794Z",
+    "trace": "projects/ielts-rater-bot/traces/b3995f9da64173b2aae09cbf38ab74a0",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.050950425s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd8bd000a5f594d112774",
+    "labels": {
+      "instanceId": "0069c7a9882b8f603383c3a98c7783200bfba755a9c0130a4db47630ae29e938e8a9df47b58c923b118fe9a221ced7568ce62359984884780d6778b595698803244f68f350945502ad59cc2821d9ab"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:46:21.686348775Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00010-tgj",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "83fefeccfbaabb8a",
+    "timestamp": "2025-09-06T06:46:21.621825Z",
+    "trace": "projects/ielts-rater-bot/traces/7d79f1a3333e030722066b9b34367c6d",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002570470s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "764",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd89d0007e317510006cd",
+    "labels": {
+      "instanceId": "0069c7a988c349015587360d498956b83d9b145c7b59d3402d626f5317b6743fa752fca4ba06e6091866e47ee3d8e8781fd2e2df40cfadb40da5028a816b0a4f994872017bf70a72b434fb02b334"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:45:49.521393791Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "61f04aeff2030201",
+    "timestamp": "2025-09-06T06:45:49.512232Z",
+    "trace": "projects/ielts-rater-bot/traces/5af879382b048ff6fffb4b53177679de",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003074390s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd88d0006361820b4bf83",
+    "labels": {
+      "instanceId": "0069c7a988c349015587360d498956b83d9b145c7b59d3402d626f5317b6743fa752fca4ba06e6091866e47ee3d8e8781fd2e2df40cfadb40da5028a816b0a4f994872017bf70a72b434fb02b334"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:45:33.616348672Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "4450f2b97e69d83f",
+    "timestamp": "2025-09-06T06:45:33.400362Z",
+    "trace": "projects/ielts-rater-bot/traces/da827d58aa36674ade414bc16d456761",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003069400s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "764",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd88500047d7ec743044e",
+    "labels": {
+      "instanceId": "0069c7a988c349015587360d498956b83d9b145c7b59d3402d626f5317b6743fa752fca4ba06e6091866e47ee3d8e8781fd2e2df40cfadb40da5028a816b0a4f994872017bf70a72b434fb02b334"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:45:25.625543913Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "18beb1b7a725fae9",
+    "timestamp": "2025-09-06T06:45:25.289325Z",
+    "trace": "projects/ielts-rater-bot/traces/67833e04ca1f6d79c66ac5f6ed9ceaff"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003024720s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd8810002c7b77a3fc89b",
+    "labels": {
+      "instanceId": "0069c7a988c349015587360d498956b83d9b145c7b59d3402d626f5317b6743fa752fca4ba06e6091866e47ee3d8e8781fd2e2df40cfadb40da5028a816b0a4f994872017bf70a72b434fb02b334"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:45:21.297064176Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "381aced62abb2d3d",
+    "timestamp": "2025-09-06T06:45:21.176981Z",
+    "trace": "projects/ielts-rater-bot/traces/61956a31619dc0795a048ca3744535d2"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003634270s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "764",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd87f00011abfdfa92208",
+    "labels": {
+      "instanceId": "0069c7a988c349015587360d498956b83d9b145c7b59d3402d626f5317b6743fa752fca4ba06e6091866e47ee3d8e8781fd2e2df40cfadb40da5028a816b0a4f994872017bf70a72b434fb02b334"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:45:19.298069551Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "7cce1e4f6fb2e8b6",
+    "timestamp": "2025-09-06T06:45:19.066585Z",
+    "trace": "projects/ielts-rater-bot/traces/2f64bd8b0c96b0fb5a048ca374453768"
+  },
+  {
+    "httpRequest": {
+      "latency": "1.264526583s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "764",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.76.2",
+      "status": 401
+    },
+    "insertId": "68bbd87e000ea5df30e14564",
+    "labels": {
+      "instanceId": "0069c7a988c349015587360d498956b83d9b145c7b59d3402d626f5317b6743fa752fca4ba06e6091866e47ee3d8e8781fd2e2df40cfadb40da5028a816b0a4f994872017bf70a72b434fb02b334"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:45:18.965337431Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "9d551d97f560c1dc",
+    "timestamp": "2025-09-06T06:45:17.498704Z",
+    "trace": "projects/ielts-rater-bot/traces/37c0d83d5d679e035a048ca3744537fc",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003299620s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "84.54.92.164",
+      "requestMethod": "POST",
+      "requestSize": "649",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26100; en-US) PowerShell/7.5.2"
+    },
+    "insertId": "68bbd0ae000e258e7ab03374",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:11:58.932544481Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "688aec8e3f63513c",
+    "timestamp": "2025-09-06T06:11:58.917459Z",
+    "trace": "projects/ielts-rater-bot/traces/734d90a2b05c5690c1408c318a2823f6",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002351440s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbd073000225d70f20a303",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:10:59.146758466Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "873dde44ce4a4db1",
+    "timestamp": "2025-09-06T06:10:59.130242Z",
+    "trace": "projects/ielts-rater-bot/traces/3036fb16d72ac59fc7e45adba049ca54",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002582290s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbd02400000f6f301597c8",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:09:40.008514795Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "05b7d6dea6c2ecf8",
+    "timestamp": "2025-09-06T06:09:39.992597Z",
+    "trace": "projects/ielts-rater-bot/traces/ab98675f5d05c4df31e13471a656ed69",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002155880s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "790",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcfe1000d839552856c7b",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:08:33.891412571Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "fd8ee1d3c89fefd2",
+    "timestamp": "2025-09-06T06:08:33.877401Z",
+    "trace": "projects/ielts-rater-bot/traces/7ee3af8edae559bbef5d2fb272733a41",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002207660s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcfa2000bc53673017a6c",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:07:30.778321884Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "cbb97980dbce3367",
+    "timestamp": "2025-09-06T06:07:30.761978Z",
+    "trace": "projects/ielts-rater-bot/traces/5366bf87d7774f0e596e0861c3242bc6",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002099020s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcf4d000a012e65ed6abb",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:06:05.659876384Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "f377926d2b6c5084",
+    "timestamp": "2025-09-06T06:06:05.646927Z",
+    "trace": "projects/ielts-rater-bot/traces/ff9e9b22c3bd86901902a9e669246c5e",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003269030s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcedc0007fce245b423b5",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:04:12.530563631Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "8ce49be980207978",
+    "timestamp": "2025-09-06T06:04:12.512970Z",
+    "trace": "projects/ielts-rater-bot/traces/8edb6ce2a9e5463153d05571610519ef",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002088240s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbce6d0006390917429deb",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:02:21.413101159Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "f1cd7825e717dcce",
+    "timestamp": "2025-09-06T06:02:21.392721Z",
+    "trace": "projects/ielts-rater-bot/traces/04039bfc5833fcf76c81511713819e87",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002125360s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbce17000463487194d74d",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T06:00:55.292805877Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "3de366d24643803d",
+    "timestamp": "2025-09-06T06:00:55.278962Z",
+    "trace": "projects/ielts-rater-bot/traces/f4dbb4f04f416467a44875cc83ef5804",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002485010s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcdd7000285daf4b44ede",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:59:51.171784034Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "09f80a8ce8389e7f",
+    "timestamp": "2025-09-06T05:59:51.161320Z",
+    "trace": "projects/ielts-rater-bot/traces/9aedcdeb6fe528f85e74cbbfa2d1577d",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002387251s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcdb70000d891ca1d029a",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:59:19.061409234Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "249a6af7f07573d3",
+    "timestamp": "2025-09-06T05:59:19.050665Z",
+    "trace": "projects/ielts-rater-bot/traces/f58ccc704809048abcc110af371de98b",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.001987720s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcda6000e61ffe2fdecbc",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:59:03.165898893Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "25d3b5a380fdc895",
+    "timestamp": "2025-09-06T05:59:02.938893Z",
+    "trace": "projects/ielts-rater-bot/traces/25616334cbf991419952933b15640833",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002297450s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcd9e000cb833aa071460",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:58:54.841260694Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "9389f1b7f3888e17",
+    "timestamp": "2025-09-06T05:58:54.829529Z",
+    "trace": "projects/ielts-rater-bot/traces/59518269cb9b29989952933b156405bf"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002107891s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcd9a000b0c7e14f8debe",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:58:50.844064310Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "adab5cad3c648404",
+    "timestamp": "2025-09-06T05:58:50.720454Z",
+    "trace": "projects/ielts-rater-bot/traces/bcbe0db79e5b4c79b011acafce21b7e4"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002148840s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "766",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcd9800096759c8404878",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:58:48.846218817Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "dc0486ab99a485f6",
+    "timestamp": "2025-09-06T05:58:48.612569Z",
+    "trace": "projects/ielts-rater-bot/traces/ee02f042dc942751b011acafce21bf0a"
+  },
+  {
+    "httpRequest": {
+      "latency": "0.001994660s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.74.2",
+      "status": 401
+    },
+    "insertId": "68bbcd980007bf70b0545b3a",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:58:48.514866977Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "6fedeafc71590950",
+    "timestamp": "2025-09-06T05:58:48.498080Z",
+    "trace": "projects/ielts-rater-bot/traces/15f7e9e0f3b0cb4cb011acafce21b390",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002956830s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "84.54.92.164",
+      "requestMethod": "POST",
+      "requestSize": "648",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.73.2",
+      "status": 401,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26100; en-US) PowerShell/7.5.2"
+    },
+    "insertId": "68bbcd6e0003dd3ec381bd5f",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:58:06.259327290Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "813e35cb3af56ad5",
+    "timestamp": "2025-09-06T05:58:06.242461Z",
+    "trace": "projects/ielts-rater-bot/traces/ea6ef34830ca847e411e894ca8b05389",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.004163341s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "149.154.161.246",
+      "requestMethod": "GET",
+      "requestSize": "627",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "373",
+      "serverIp": "34.143.79.2",
+      "status": 404,
+      "userAgent": "TelegramBot (like TwitterBot)"
+    },
+    "insertId": "68bbcc4700078fba90a36330",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:53:11.501167721Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "206c59729806116c",
+    "timestamp": "2025-09-06T05:53:11.485084Z",
+    "trace": "projects/ielts-rater-bot/traces/7e0e7e8be233e225d3ce49e9e83b2835",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.003027010s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "84.54.92.164",
+      "requestMethod": "POST",
+      "requestSize": "648",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "200",
+      "serverIp": "34.143.75.2",
+      "status": 401,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Microsoft Windows 10.0.26100; en-US) PowerShell/7.5.2"
+    },
+    "insertId": "68bbc9170005b4c73cd334d6",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:39:35.380191114Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "WARNING",
+    "spanId": "c4d9e528816c344e",
+    "timestamp": "2025-09-06T05:39:35.363127Z",
+    "trace": "projects/ielts-rater-bot/traces/5af835b73e54971ba906ac15ceeaa735",
+    "traceSampled": true
+  },
+  {
+    "httpRequest": {
+      "latency": "0.002602030s",
+      "protocol": "HTTP/1.1",
+      "remoteIp": "91.108.5.68",
+      "requestMethod": "POST",
+      "requestSize": "765",
+      "requestUrl": "https://tg-webhook-proxy-ydu3vhd6nq-uc.a.run.app/tg/webhook",
+      "responseSize": "191",
+      "serverIp": "34.143.79.2",
+      "status": 200
+    },
+    "insertId": "68bbc79b0000a8650c63d57c",
+    "labels": {
+      "instanceId": "0069c7a9881506fdd8ce10a35aa2af48f43e7f6d73afabb6f86c1045e8b9221c8967e56f1861035465e57ce82af00ad3d80c2e80aadc4c8823c3b31c7cd677139999f75f8e4bd46e516832bb9227"
+    },
+    "logName": "projects/ielts-rater-bot/logs/run.googleapis.com%2Frequests",
+    "receiveTimestamp": "2025-09-06T05:33:15.144317869Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "tg-webhook-proxy",
+        "location": "us-central1",
+        "project_id": "ielts-rater-bot",
+        "revision_name": "tg-webhook-proxy-00006-vmq",
+        "service_name": "tg-webhook-proxy"
+      },
+      "type": "cloud_run_revision"
+    },
+    "severity": "INFO",
+    "spanId": "18b918cc6b1d0568",
+    "timestamp": "2025-09-06T05:33:15.039173Z",
+    "trace": "projects/ielts-rater-bot/traces/8708f764bf7621b55d4e73ecbeea84d6"
+  }
+]
