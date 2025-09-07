@@ -1,0 +1,35 @@
+name: sprint6-rag-eval
+on:
+  push:
+    branches: ["main","sprint6/**"]
+jobs:
+  build_eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: python-version: "3.10"
+      - name: Build store
+        env: {OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}}
+        run: python rag/build_store.py | tee sprint6_build.log
+      - name: Retrieval eval
+        run: python rag/evaluator.py | tee sprint6_retrieval.log
+      - name: Full run + QWK
+        env: {OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}}
+        run: python scripts/run_rag_build_and_query.py | tee sprint6_orch.log
+      - name: Assert metrics
+        run: |
+          BJ=$(jq '.retrieval_eval.R@1' sprint6_retrieval.log)
+          if (( $(echo "$BJ < 0.5" | bc -l) )); then echo "Recall@1 < 0.5 — fail" && exit 1; fi
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprint6-artifacts
+          path: |
+            rag/store/index.json
+            sprint6_build.log
+            sprint6_retrieval.log
+            sprint6_orch.log
+            notebooks/outputs/sprint5_build.json
+            notebooks/outputs/sprint5_query.json
+            notebooks/outputs/sprint6_rag_eval.json

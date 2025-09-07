@@ -25,3 +25,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# + retrieval eval
+import subprocess
+eval_out = subprocess.run([sys.executable, 'rag/evaluator.py'], capture_output=True, text=True, check=True).stdout
+with open(Path('notebooks/outputs')/'sprint6_rag_eval.json','w', encoding='utf-8') as f: f.write(eval_out)
+print(json.dumps({'retrieval_eval': json.loads(eval_out)}, indent=2))
+
