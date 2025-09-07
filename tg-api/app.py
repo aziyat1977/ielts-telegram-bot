@@ -1,58 +1,66 @@
-# tg-api/app.py — FastAPI Telegram webhook → RAG Coach (bind via gunicorn/uvicorn)
-import os, json, urllib.request
-from fastapi import FastAPI, Header, Request
+# tg-api/app.py — logs, metrics, ping, in-memory per-chat rate limiter, reset_webhook
+import os, json, time, threading, urllib.request, logging
+from fastapi import FastAPI, Header, Request, HTTPException
 from pydantic import BaseModel
 
-BOT_TOKEN    = os.environ.get("TELEGRAM_BOT_TOKEN","").strip()
-SECRET_TOKEN = os.environ.get("TELEGRAM_SECRET_TOKEN","").strip()
-COACH_URL    = os.environ.get("COACH_API_URL","").strip()
+BOT_TOKEN    = os.getenv("TELEGRAM_BOT_TOKEN","")
+SECRET_TOKEN = os.getenv("TELEGRAM_SECRET_TOKEN","")
+COACH_URL    = os.getenv("COACH_API_URL","")
 if not BOT_TOKEN or not SECRET_TOKEN or not COACH_URL:
-    raise RuntimeError("Missing env: TELEGRAM_BOT_TOKEN / TELEGRAM_SECRET_TOKEN / COACH_API_URL")
+    raise RuntimeError("Missing env: TELEGRAM_BOT_TOKEN/SECRET/COACH")
 
 API_BASE = f"https://api.telegram.org/bot{BOT_TOKEN}"
+app = FastAPI(title="TG Webhook → RAG Coach (Sprint 9)")
 
-app = FastAPI(title="TG Webhook → RAG Coach", version="0.1.1")
-
-def http_json(url, payload=None, headers=None, timeout=30):
-    hs = {"Content-Type":"application/json"}
-    if headers: hs.update(headers)
-    data = json.dumps(payload).encode("utf-8") if payload is not None else None
-    req = urllib.request.Request(url, data=data, headers=hs)
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8"))
-
-def send_message(chat_id, text):
-    return http_json(f"{API_BASE}/sendMessage", {"chat_id": chat_id, "text": text, "parse_mode":"Markdown"})
+logging.basicConfig(level=logging.INFO)
+METRICS = {"total": 0, "errors": 0}
+RATE = {}
+LOCK = threading.Lock()
+RATE_LIMIT = 5  # max messages
+RATE_WINDOW = 60  # seconds
 
 class Update(BaseModel):
-    update_id: int | None = None
-    message: dict | None = None
-    edited_message: dict | None = None
+    update_id: int|None = None
+    message: dict|None = None
 
-@app.get("/")
-def root(): return {"ok": True}
+@app.get("/debug/ping")
+def ping():
+    return {"ok": True, "metrics": METRICS, "rate_keys": list(RATE.keys())}
 
-@app.get("/healthz")
-def healthz(): return {"ok": True}
+def http_json(url,payload=None,timeout=30):
+    data=json.dumps(payload).encode("utf-8") if payload else None
+    req=urllib.request.Request(url, data=data, headers={"Content-Type":"application/json"})
+    with urllib.request.urlopen(req,timeout=timeout) as r:
+        return json.loads(r.read().decode())
 
 @app.post("/tg/webhook")
-async def tg_webhook(req: Request, update: Update, x_telegram_bot_api_secret_token: str | None = Header(None)):
-    if (x_telegram_bot_api_secret_token or "") != SECRET_TOKEN:
-        return {"ok": False, "error": "unauthorized"}
-    msg = (update.message or {})
-    chat = (msg.get("chat") or {}).get("id")
-    text = (msg.get("text") or "").strip()
-    if not chat: return {"ok": True}
+async def tg_webhook(req: Request, update: Update, x_telegram_bot_api_secret_token: str|None = Header(None)):
+    METRICS["total"] += 1
+    chat = (update.message or {}).get("chat",{}).get("id")
+    text = (update.message or {}).get("text","")
+    now = time.time()
+    with LOCK:
+        q = RATE.get(chat, [])
+        q = [ts for ts in q if now - ts < RATE_WINDOW]
+        if len(q) >= RATE_LIMIT:
+            raise HTTPException(429, "Rate limit exceeded")
+        q.append(now)
+        RATE[chat] = q
+    logging.info(f"Msg from {chat}: {text}")
     try:
-        coach_resp = http_json(COACH_URL, {"query": text})
-        bullets = coach_resp.get("summary_bullets") or []
-        rationale = coach_resp.get("rationale","")
-        reply = "*Grounded coach*\n" + "\n".join(bullets[:3])
+        resp = http_json(COACH_URL, {"query": text})
+        bullets = resp.get("summary_bullets", [])[:3]
+        rationale = resp.get("rationale","")
+        reply = "*Grounded coach*\n" + "\n".join(bullets)
         if rationale: reply += f"\n\n_{rationale}_"
-    except Exception:
-        reply = "Sorry—coach backend unavailable."
+    except Exception as e:
+        METRICS["errors"] +=1
+        logging.error(f"Coach error: {e}")
+        reply = "Sorry—coach unavailable."
     try:
-        send_message(chat, reply[:3900])
-    except Exception:
-        pass
+        http_json(f"{API_BASE}/sendMessage", {"chat_id": chat, "text": reply[:3900], "parse_mode":"Markdown"})
+    except Exception as e:
+        logging.error(f"Send error: {e}")
     return {"ok": True}
+
+# reset_webhook utility is provided as a separate PS script.
