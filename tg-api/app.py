@@ -5,20 +5,19 @@ from pydantic import BaseModel
 
 BOT_TOKEN    = os.getenv("TELEGRAM_BOT_TOKEN","").strip()
 SECRET_TOKEN = os.getenv("TELEGRAM_SECRET_TOKEN","").strip()
-COACH_URL    = os.getenv("COACH_API_URL","").strip()  # may be empty (graceful fallback)
+COACH_URL    = os.getenv("COACH_API_URL","").strip()
 
 if not BOT_TOKEN or not SECRET_TOKEN:
     raise RuntimeError("Missing env: TELEGRAM_BOT_TOKEN / TELEGRAM_SECRET_TOKEN")
 
 API_BASE = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
-# Logging & in-process metrics
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 METRICS = {"total": 0, "errors": 0}
 RATE    = {}    # chat_id -> timestamps[]
 LOCK    = threading.Lock()
-RATE_LIMIT  = int(os.getenv("RATE_LIMIT", "5"))      # messages
-RATE_WINDOW = int(os.getenv("RATE_WINDOW", "60"))    # seconds
+RATE_LIMIT  = int(os.getenv("RATE_LIMIT", "5"))
+RATE_WINDOW = int(os.getenv("RATE_WINDOW", "60"))
 
 app = FastAPI(title="TG Webhook → RAG Coach (Sprint 9)", version="0.1.2")
 
@@ -41,13 +40,10 @@ def send_message(chat_id, text):
 
 @app.get("/debug/ping")
 def debug_ping():
-    # show current metrics and rate keys
     return {"ok": True, "metrics": METRICS, "rate_keys": list(RATE.keys()), "has_coach": bool(COACH_URL)}
 
 @app.post("/tg/webhook")
 async def tg_webhook(update: Update, x_telegram_bot_api_secret_token: str | None = Header(None)):
-    # Secret token verification (Telegram sends X-Telegram-Bot-Api-Secret-Token)
-    # https://core.telegram.org/bots/api#setwebhook (secret_token)
     if (x_telegram_bot_api_secret_token or "") != SECRET_TOKEN:
         raise HTTPException(401, "unauthorized")
 
@@ -59,7 +55,6 @@ async def tg_webhook(update: Update, x_telegram_bot_api_secret_token: str | None
     if not chat:
         return {"ok": True}
 
-    # Per-chat rate limiting
     now = time.time()
     with LOCK:
         q = [ts for ts in RATE.get(chat, []) if now - ts < RATE_WINDOW]

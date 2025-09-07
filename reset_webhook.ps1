@@ -1,12 +1,11 @@
-param(
-  [string]$Action = "reset" # or "delete"
-)
+param([string]$Action = "reset") # or "delete"
 $Project = if ($env:PROJECT) { $env:PROJECT } else { (gcloud config get-value core/project --quiet).Trim() }
 $Region  = if ($env:RUN_REGION) { $env:RUN_REGION } else { "us-central1" }
 $Service = if ($env:TG_WEBHOOK) { $env:TG_WEBHOOK } else { "tg-webhook" }
 
 $Token = $env:TELEGRAM_BOT_TOKEN
-if (-not $Token) { $Token = Read-Host -AsSecureString -Prompt "Enter TELEGRAM_BOT_TOKEN (hidden)"; 
+if (-not $Token) {
+  $Token = Read-Host -AsSecureString -Prompt "Enter TELEGRAM_BOT_TOKEN (hidden)"
   $ptr=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($Token)
   $Token=[Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)
   [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr)
@@ -15,7 +14,7 @@ if (-not $Token) { $Token = Read-Host -AsSecureString -Prompt "Enter TELEGRAM_BO
 $svc = gcloud run services describe $Service --region $Region --project $Project --format=json | ConvertFrom-Json
 if (-not $svc) { Write-Error "Service not found."; exit 1 }
 $BASE = $svc.status.url.TrimEnd("/")
-# Extract TELEGRAM_SECRET_TOKEN from env
+
 $Secret = ""
 try{
   $envs = $svc.spec.template.spec.containers[0].env
